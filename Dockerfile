@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install intl pdo pdo_mysql zip
 
 # Set working directory
-WORKDIR /var/www/html
+WORKDIR /var/www/html/public
 
 # Copy application code
 COPY . .
@@ -19,7 +19,7 @@ COPY . .
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Install PHP dependencies
-RUN composer install
+RUN composer install --no-dev --optimize-autoloader
 
 # Expose port 80
 EXPOSE 80
