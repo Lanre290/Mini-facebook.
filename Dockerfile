@@ -19,7 +19,7 @@ COPY . .
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Install PHP dependencies
-RUN composer install
+RUN composer install --no-dev --optimize-autoloader
 
 # Expose port 80
 EXPOSE 80
