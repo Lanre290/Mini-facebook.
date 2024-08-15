@@ -1,3 +1,4 @@
+
 async function follow(event,id){
     event.disabled = true;
     event.style.backgroundColor = 'rgb(191, 219, 254)';
@@ -414,7 +415,7 @@ async function saveUserChanges(elem, event) {
 
     let formData = new FormData(elem);
 
-    try {
+  
         const response = await fetch("/api/save-user-changes", {
             method: 'POST',
             body: formData,
@@ -424,8 +425,6 @@ async function saveUserChanges(elem, event) {
         });
 
         if (response.ok) {
-            console.log(response);
-            console.log(await response.json());
             toastr.info('Account updated successfully.');
 
             document.getElementById('user-name-text').innerText = formData.get('name');
@@ -444,12 +443,12 @@ async function saveUserChanges(elem, event) {
             const coverImage = formData.get('cover_image');
             const userImage = formData.get('image');
             
-            if (coverImage) {
+            if (coverImage.name != '') {
                 const coverImageUrl = await getImage(coverImage);
-                document.getElementById('user-cover-img').style.backgroundImage = `url('${coverImageUrl}')`;
+                coverImageUrl != '' ? document.getElementById('user-cover-img').style.backgroundImage = `url('${coverImageUrl}')` : '';
             }
             
-            if (userImage) {
+            if (userImage.name != '') {
                 const userImageUrl = await getImage(userImage);
                 document.getElementById('user-dp-img').style.backgroundImage = `url('${userImageUrl}')`;
             }
@@ -459,22 +458,16 @@ async function saveUserChanges(elem, event) {
             btn.style.cursor = 'default';
             btn.innerHTML = 'Submit';
         } else {
-            let res = response;
-            console.error('Error:', errorData);
+            console.log(response);
+            let res = await response.json();
+            console.error('Error:', res);
             toastr.error('Error connecting to database.');
             btn.disabled = false;
             btn.style.backgroundColor = 'rgb(29 78 216)';
             btn.style.cursor = 'default';
             btn.innerHTML = 'Submit';
         }
-    } catch (error) {
-        console.error('Fetch error:', error);
-        toastr.error('Error connecting to database.');
-        btn.disabled = false;
-        btn.style.backgroundColor = 'rgb(29 78 216)';
-        btn.style.cursor = 'default';
-        btn.innerHTML = 'Submit';
-    }
+    
 }
 
 function copyPostUrl(element){
@@ -522,5 +515,27 @@ function showControl(element){
 function hidePost(element){
     if(element.parentElement.parentElement.parentElement.parentElement.style.display = 'none'){
         toastr.info('Post Hidden.')
+    }
+}
+
+function logout(){
+    fetch("/logout", {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    
+    window.location.href = "{{ route('login') }}"
+}
+
+
+function toggleUserOptions(element){
+    let target = element.parentElement.querySelector('#options');
+    if(target.style.display == 'none'){
+        target.style.display = 'flex';
+    }
+    else{
+        target.style.display = 'none';
     }
 }

@@ -1,5 +1,5 @@
 @foreach ($data as $user)
-    <div class="flex flex-col rounded-lg cursor-pointer h-2/5 w-full md:w-1/4 sm:w-1/2 lg:w-1/5 bg-gray-300 m-2">
+    <div class="flex flex-col rounded-lg cursor-pointer h-2/5 w-full md:w-1/4 sm:w-2/5 lg:w-1/5 bg-gray-300 m-2">
         <a href="/profile/{{ $user->id }}" class="h-3/5 w-full rounded-tl-lg rounded-tr-lg bg-gray-400 bg-cover bg-no-repeat bg-center" style="background-image: url('{{ asset($user->image_path) }}')"></a>
         <div class="flex flex-col justify-center items-center w-full h-2/5">
             <a href="/profile/{{ $user->id }}" class="w-full">

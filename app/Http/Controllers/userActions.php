@@ -92,54 +92,66 @@ class userActions extends Controller
     }
 
     public function saveChanges(Request $request){
-        if(null !== session('user')){
-            $request->validate([
-                'name' => 'string|required',
-                'bio' => 'string|required',
-                'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-                'cover_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
-            ]);
+        try {
+            if(null !== session('user')){
+                $request->validate([
+                    'name' => 'string|required',
+                    'bio' => 'string|required',
+                    'image' => 'mimes:jpeg,png,jpg|max:200000',
+                    'cover_image' => 'mimes:jpeg,png,jpg|max:200000'
+                ]);
+    
+                $name = $request->name;
+                $bio = $request->bio;
+                $id = session('user')->id;
+                $image_path = '';
+                $cover_image_path = '';
+    
+                $image = $request->file('image');
+                $cover_image = $request->file('cover_image');
+                $imageChanged = false;
+                $cimageChanged = false;
+    
+    
+                $imageName = Users::where('id', $id)->pluck('id')->first() . '.png';
+                $coverImageName = Users::where('id', $id)->pluck('id')->first() . '.png';
+                
+                if($image){
+                    $image->move(public_path('img/users_dp'), $imageName);
+                    $image_path = 'img/users_dp/' . $imageName;
+                    $imageChanged = true;
+                }
 
-            $name = $request->name;
-            $bio = $request->bio;
-            $id = session('user')->id;
-            $image_path = '';
-            $cover_image_path = '';
-
-            $image = $request->file('image');
-            $cover_image = $request->file('cover_image');
-            
-            $imageName = Users::where('id', $id)->pluck('id')->first() . '.png';
-            $coverImageName = Users::where('id', $id)->pluck('id')->first() . '.png';
-            
-            $image->move(public_path('img/users_dp'), $imageName);
-            $cover_image->move(public_path('img/cover_images'), $coverImageName);
-            
-            // Save the image path in the validated data
-            $image_path = 'img/users_dp/' . $imageName;
-            $cover_image_path = 'img/cover_images/' . $coverImageName;
-
-            $update = Users::where('id', $id)->update([
-                'name' => $name,
-                'bio' => $bio,
-                'image_path' => $image_path,
-                'cover_img_path' => $cover_image_path
-            ]);
-
-            if($update){
-                session('user')->name = $name;
-                session('user') ->bio = $bio;
-                session('user')->cover_img_path = $cover_image_path;
-                session('user') ->image_path = $image_path;
-
-                return response()->json(['data' => true]); 
+                if($coverImageName){
+                    $cover_image->move(public_path('img/cover_images'), $coverImageName);
+                    $cover_image_path = 'img/cover_images/' . $coverImageName;
+                    $cimageChanged = true;
+                }
+    
+                $update = Users::where('id', $id)->update([
+                    'name' => $name,
+                    'bio' => $bio,
+                    'image_path' => $image_path,
+                    'cover_img_path' => $cover_image_path
+                ]);
+    
+                if($update){
+                    session('user')->name = $name;
+                    session('user') ->bio = $bio;
+                    $cimageChanged == true ? session('user')->cover_img_path = $cover_image_path : '';
+                    $imageChanged == true ? session('user') ->image_path = $image_path : '';
+    
+                    return response()->json(['data' => true]); 
+                }
+                else{
+                    return response()->json(['data' => false], 500); 
+                }
             }
             else{
-                return response()->json(['data' => false], 500); 
+                return redirect(route('login'));
             }
-        }
-        else{
-            return redirect(route('login'));
+        } catch (\Throwable $th) {
+            return response()->json(['data' => $th]); 
         }
     }
 
@@ -186,7 +198,7 @@ class userActions extends Controller
     public function makePost(Request $request){
         $request->validate([
             'caption' => 'string|required',
-            'files.*' => 'file|mimes:jpeg,png,jpg,gif,mp4,mov,avi|max:20480'
+            'files.*' => 'file|mimes:jpeg,png,jpg,gif,mp4,mov,avi'
         ]);
 
         $text = $request->caption;

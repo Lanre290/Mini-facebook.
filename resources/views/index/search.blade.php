@@ -19,13 +19,22 @@
                     Posts
                 </div>
             </div>
-            <div id="posts_div" class="w-full min-h-screen overflow-y-auto">
-                @include('includes.post', ['data' => $posts])
+            <div id="people_div" class="w-full min-h-screen flex {{ count($user) > 0 ? 'flex-wrap' : 'flex-col justify-center items-center'}}">
+                @if (count($user) > 0)
+                    @include('includes.people', ['data' => $user])
+                @else
+                    <img src="{{ asset('img/empty-box.png') }}" alt="no saved post" class="w-32 h-32 object-contain mx-auto mt-10" />
+                    <h3 class="text-gray-600 mx-auto text-2xl">No users found. ☹️</h3>
+                @endif
             </div>
-            <div id="people_div" class="w-full min-h-screen overflow-y-auto hidden">
-                @include('includes.people', ['data' => $user])
+            <div id="posts_div" class="w-full min-h-screen flex-col hidden">
+                @if (count($posts) > 0)
+                    @include('includes.posts', ['data' => $posts])
+                @else
+                    <img src="{{ asset('img/empty-box.png') }}" alt="no saved post" class="w-32 h-32 object-contain mx-auto mt-10" />
+                    <h3 class="text-gray-600 mx-auto text-2xl">No posts found. ☹️</h3>
+                @endif
             </div>
-            {{-- @include('includes.posts',['data' => $data]) --}}
         </div>
     </div>
 
@@ -44,11 +53,11 @@
 
                 element.classList.add('active-search');
 
-                if(el.id == 'post'){
+                if(element.id == 'post'){
                     document.getElementById('posts_div').style.display = 'flex';
                     document.getElementById('people_div').style.display = 'none';
                 }
-                else if(el.id == 'people'){
+                else if(element.id == 'people'){
                     document.getElementById('people_div').style.display = 'flex';
                     document.getElementById('posts_div').style.display = 'none';
                 }

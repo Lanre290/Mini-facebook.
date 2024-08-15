@@ -4,13 +4,22 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="w-full sm:w-full md:w-full lg:w-9/12 z-10flex flex-col h-full justify-start bg-cover bg-center bg-no-repeat overflow-y-auto pb-5">
     <div class="flex flex-col">
-        <div class="w-full h-1/3 py-36  rounded-bl-xl rounded-br-xl bg-gray-400 relative" style="background-image: url('{{ asset(session('user')->cover_img_path) }}')" id="user-cover-img">
+        <div class="w-full h-1/3 py-36  rounded-bl-xl rounded-br-xl bg-gray-400 relative bg-cover bg-center bg-no-repeat" style="background-image: url('{{ asset(session('user')->cover_img_path) }}')" id="user-cover-img">
             <div class="w-36 h-36 rounded-full border border-gray-50 bg-gray-300 absolute bottom-0 left-4 bg-cover bg-center bg-no-repeat" id="user-dp-img" style="transform: translateY(50%);background-image: url('{{ asset(session('user')->image_path) }}')">
             </div>
         </div>
         <div class="flex flex-col md:flex-row align-center justify-between mt-16 w-fullz">
             <h1 class="text-5xl text-gray-800 ml-3 p-2 bg-transparent mb-3" id='user-name-text'>{{ session('user')->name }}</h1>
-            <button class="w-5/6 md:w-auto py-2 h-10 px-5 bg-blue-600 mr-5 m-auto rounded-lg shadow-md cursor-pointer text-gray-50 hover:bg-blue-700" id='edit-account'>Edit Profile</button>
+            <div class="flex flex-row">
+                <button class="w-5/6 md:w-auto py-2 h-10 px-5 bg-blue-600 mr-5 m-auto rounded-lg shadow-md cursor-pointer text-gray-50 hover:bg-blue-700" onclick="toggleMakePost()" id="make-post-btn"><i class="fa fa-plus"></i></button>
+                <button class="w-5/6 md:w-auto py-2 h-10 px-5 bg-blue-600 mr-5 m-auto rounded-lg shadow-md cursor-pointer text-gray-50 hover:bg-blue-700" id='edit-account'>Edit Profile</button>
+                <div class="flex flex-col relative w-10 h-10 mr-5 m-auto">
+                    <button class="w-10 h-10 rounded-md cursor-pointer px-5 py-2 mr-5 m-auto bg-gray-200 hover:bg-gray-300 hover:bg-opacity-50 text-gray-50 flex justify-center items-center text-lg" onclick="toggleUserOptions(this)"><i class="fa fa-ellipsis-h"></i></button>
+                    <div class="absolute -bottom-12 w-36 right-4 bg-gray-50 shadow-lg flex-col" style="display: none;" id="options">
+                        <button class="w-full cursor-pointer px-2 py-2 bg-transparent text-gray-500 hover:bg-gray-200 hover:bg-opacity-50" onclick="logout()"><i class="fa fa-sign-out text-red-600"></i>&nbsp;&nbsp;Log out</button>
+                    </div>
+                </div>
+            </div>
         </div>
         <h3 class="p-2 mb-3 ml-3 text-2xl italic" id='user-bio-text'>
             @if (session('user')->bio !== '')
@@ -79,7 +88,7 @@
         <div class="flex flex-col justify-start h-5/6 overflow-y-auto">
             <form action="/api/save-user-changes" method="post" class="flex flex-col justify-between h-full" id="edit-profile-form" onsubmit="saveUserChanges(this, event)">
                 @csrf
-                <div class="w-5/6 bg-gray-200 rounded-lg cursor-pointer relative m-auto h-36 change_dp bg-cover bg-center bg-no-repeat" id="ci_image">
+                <div class="w-5/6 bg-gray-200 rounded-lg cursor-pointer relative m-auto h-36 change_dp bg-cover bg-center bg-no-repeat" id="ci_image" style="background-image: url('{{ asset(session('user')->cover_img_path) }}')">
                     <input type="file" name="cover_image" id="ci_input" class="absolute top-0 bottom-0 right-0 left-0 opacity-0 rounded-lg cursor-pointer z-10">
                     <div class="absolute top-0 bottom-0 right-0 left-0 rounded-lg text-3xl text-gray-50 opacity-0 bg-gray-600 bg-opacity-50 flex justify-center z-5 items-center camera_div"><i class="fa fa-camera"></i></div>
                 </div>

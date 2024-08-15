@@ -18,8 +18,8 @@ use Illuminate\Support\Facades\Session;
 
 date_default_timezone_set('Africa/Lagos');
 
-class Views extends Controller
-{
+class Views extends Controller{
+
     public function profile($id){
         if(null !== session('user')){
             $exists = Users::where('id', $id)->count();
@@ -179,14 +179,35 @@ class Views extends Controller
         $postResult = Post::where('text', 'LIKE', "%{$searchTerm}%")
                         ->get();
 
-        $userResult = Users::where('name', 'LIKE', "%{$searchTerm}%")
+        $userResult = Users::where('id', '!=', session('user')->id)
+                        ->where('name', 'LIKE', "%{$searchTerm}%")
                         ->orWhere('bio', 'LIKE', "%{$searchTerm}%")
                         ->select('id','name', 'email', 'bio', 'image_path')
                         ->get();
         
         $postResult = $this->validatePost($postResult);
+
+        $count = 0;
+        foreach ($userResult as $person) {
+            $isFollowing = followers::where('following',$person->id)
+                        ->where('follower', session('user')->id)
+                        ->count();
+            $isBlocked = $this->isBlocked($person->id);
+            if($isBlocked > 0){
+                unset($people[$count]);
+            }
+            if($person->image_path == ''){
+                $person->image_path = asset('img/users_dp/person.png');
+            }
+            $followers = followers::where('following',$person->id)
+                        ->count();
+            if ($isFollowing > 0) {
+                $person->is_following = true;
+            }
+            $person->followers = $followers;
+            $count++;
+        }
         
-        dd(count($userResult), count($postResult));
         if(count($postResult) > 0 || count($userResult) >0){
             return view('index.search')->with([
                 'posts' => $postResult,

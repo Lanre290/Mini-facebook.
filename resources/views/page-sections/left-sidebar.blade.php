@@ -5,25 +5,25 @@
             <li class="w-5/6 rounded-3xl text-center cursor-pointer bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center mx-auto" id='home_nav'>
                 <a href='{{ route('home')}}' class='w-full h-full py-3 px-6 flex flex-row items-center justify-center'>
                     <div class="bg-center bg-no-repeat bg-cover w-10 h-10 mx-4" style="background-image: url('{{ asset('img/3d-house.png') }}')"></div>
-                    Home
+                    <h3 class="hidden lg:flex">Home</h3>
                 </a>
             </li>
             <li class="w-5/6 rounded-3xl text-center cursor-pointer bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center mx-auto" id='profile_nav'>
                 <a href='{{ route('profile', ['id' => $id]) }}' class='w-full h-full py-3 px-6 flex flex-row items-center justify-center'>
                     <div class="bg-center bg-no-repeat bg-cover w-10 h-10 mx-4" style="background-image: url('{{ asset('img/user.png') }}')"></div>
-                    Profile
+                    <h3 class="hidden lg:flex">Profile</h3>
                 </a>
             </li>
             <li class="w-5/6 rounded-3xl text-center cursor-pointer bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center mx-auto" id='people_nav'>
                 <a href='{{ route('people')}}' class='w-full h-full py-3 px-6 flex flex-row items-center justify-center'>
                     <div class="bg-center bg-no-repeat bg-cover w-10 h-10 mx-4" style="background-image: url('{{ asset('img/social.png') }}')"></div>
-                    People
+                    <h3 class="hidden lg:flex">People</h3>
                 </a>
             </li>
             <li class="w-5/6 rounded-3xl text-center cursor-pointer bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center mx-auto" id='saved_nav'>
                 <a href='{{ route('saved')}}' class='w-full h-full py-3 px-6 flex flex-row items-center justify-center'>
                     <div class="bg-center bg-no-repeat bg-cover w-10 h-10 mx-4" style="background-image: url('{{ asset('img/bookmark.png') }}')"></div>
-                    Saved
+                    <h3 class="hidden lg:flex">Saved</h3>
                 </a>
             </li>
         @if ($active == 'home')
@@ -45,9 +45,9 @@
         @endif
     </ul>
 
-    <div class="flex flex-col justify-center items-center w-full">
-        <button class="bg-blue-500 py-3 px-6 rounded-xl cursor-pointer text-2xl text-gray-50 font-bold w-5/6 mb-5 m-auto hover:bg-blue-600" id="make-post-btn">Create</button>
-        <a class="text-red-600 font-bold text-2xl mx-auto cursor-pointer mt-5 m-3" id='logout'>Logout</a>
+    <div class="flex flex-col justify-center items-center sm:hidden lg:flex w-full">
+        <button class="bg-blue-500 py-3 px-6 rounded-xl cursor-pointer text-2xl text-gray-50 font-bold w-5/6 mb-5 m-auto hover:bg-blue-600" onclick="toggleMakePost()" id="make-post-btn">Create</button>
+        <a class="text-red-600 font-bold text-2xl mx-auto cursor-pointer mt-5 m-3" onclick="logout()" id='logout'>Logout</a>
     </div>
 
     
@@ -89,16 +89,6 @@
     }
 </style>
 <script>
-    document.getElementById('logout').addEventListener('click', async () => {
-        fetch("/logout", {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        
-        window.location.href = "{{ route('login') }}"
-    });
 
     document.querySelectorAll('.close-dialog').forEach(element => {
         element.addEventListener('click', () => {
@@ -106,9 +96,9 @@
         });
     }); 
 
-    document.getElementById('make-post-btn').addEventListener('click', () => {
+    function toggleMakePost(){
         document.getElementById('make-post-div').style.display = 'flex';
-    });
+    };
 
     let postImages = [];
 
@@ -180,8 +170,8 @@
                 }
             });
 
-
             if (response.ok) {
+                console.log(response);
                 postImages = [];
                 let res = await response.json();
                 window.location.href = res.url;
@@ -190,9 +180,9 @@
                 document.getElementById('post_images_div').innerHTML = '';
                 document.getElementById('post_input').value = '';
             } else {
+                let res = await response.json();
                 toastr.error('Error connecting to database.')
-                console.error(await response);
-                console.error(await response.json())
+                console.error(res);
             }
         }
         catch(error){
