@@ -21,6 +21,7 @@ Route::get('/home', [Views::class, 'home'])->name('home');
 Route::get('/profile/{id}', [Views::class, 'profile'])->name('profile');
 Route::get('/people', [Views::class, 'people'])->name('people');
 Route::get('/saved', [Views::class, 'saved'])->name('saved');
+Route::get('/messages', [Views::class, 'messages'])->name('messages');
 
 Route::get('/post/{id}', [Views::class, 'post'])->name('post');
 

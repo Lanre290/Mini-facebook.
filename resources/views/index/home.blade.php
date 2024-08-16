@@ -5,6 +5,7 @@
     @include('page-sections.header')
     @include('includes.session')
     
+
     
     <div class="absolute top-20 right-0 left-0 bottom-0 overflow-y-auto flex flex-row">
         @if (null !== session('user'))

@@ -49,40 +49,41 @@ class AuthController extends Controller
     }
 
     public function login(Request $request){
-        $request->validate([
-            'email' => 'required|string',
-            'pwd' => 'required|string'
-        ]);
-
-        $email = $request->email;
-        $pwd = $request->pwd;
-
-        if(empty($email) || empty($pwd)){
-            return response()->json(['error' => 'Error processing data.','data' => ''], 422);
-        }
-        else{
-            $emailExists = Users::where('email', $email)->count();
-            if($emailExists < 1){
-                return response()->json(['error' => 'Email does not exist.', 'data' => ''], 404);
+        try {
+            $request->validate([
+                'email' => 'required|string',
+                'pwd' => 'required|string'
+            ]);
+    
+            $email = $request->email;
+            $pwd = $request->pwd;
+    
+            if(empty($email) || empty($pwd)){
+                return response()->json(['error' => 'Error processing data.','data' => ''], 422);
             }
             else{
-                $Hashedpwd = Users::where('email', $email)->pluck('pwd')->first();
-                
-                if(Hash::check($pwd, $Hashedpwd)){
-                    $userData = Users::where('email', $email)->select('id','email','name','bio','image_path')->first();
-                    session(['user' => $userData]);
-                    if(session('user')->image_path == ''){
-                        session('user')->image_path = asset('img/users_dp/default.png');
-                    }
-                    if(session('user')->cover_img_path !== ''){
-                        session('user')->cover_img_path = asset(session('user')->cover_img_path);
-                    }
-                    return response(['data' => true], 200);
+                $emailExists = Users::where('email', $email)->count();
+                if($emailExists < 1){
+                    return response()->json(['error' => 'Email does not exist.', 'data' => ''], 404);
                 }
                 else{
-                    return response(['error' => 'Incorrect password.', 'data' => ''], 404);
+                    $Hashedpwd = Users::where('email', $email)->pluck('pwd')->first();
+                    
+                    if(Hash::check($pwd, $Hashedpwd)){
+                        $userData = Users::where('email', $email)->select('id','email','name','bio','image_path')->first();
+                        session(['user' => $userData]);
+                        if(session('user')->image_path == ''){
+                            session('user')->image_path = asset('img/users_dp/default.png');
+                        }
+                        return response(['data' => true], 200);
+                    }
+                    else{
+                        return response(['error' => 'Incorrect password.', 'data' => ''], 404);
+                    }
                 }
             }
+        } catch (\Throwable $th) {
+            return response(['error' => $th]);
         }
     }
 

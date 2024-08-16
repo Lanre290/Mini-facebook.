@@ -346,4 +346,8 @@ class Views extends Controller{
 
         return $comments;
     }
+
+    public function messages(){
+        return view('index.message');
+    }
 }
