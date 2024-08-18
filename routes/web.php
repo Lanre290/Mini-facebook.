@@ -18,6 +18,10 @@ Route::get('/login', function () {
 
 Route::get('/home', [Views::class, 'home'])->name('home');
 
+Route::get('/', function () {
+    return redirect('/home');
+});
+
 Route::get('/profile/{id}', [Views::class, 'profile'])->name('profile');
 Route::get('/people', [Views::class, 'people'])->name('people');
 Route::get('/saved', [Views::class, 'saved'])->name('saved');
