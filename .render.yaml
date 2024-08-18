@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: my-laravel-app
+    name: connect
     env: php
     region: oregon
     buildCommand: "composer install --no-dev --optimize-autoloader"
