@@ -1,9 +1,6 @@
-FROM richarvey/nginx-php-fpm:1.7.2
+FROM php:8.1-fpm
 
-# Set working directory
-WORKDIR /var/www/html
-
-# Install PHP extensions
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg62-turbo-dev \
@@ -12,18 +9,21 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql mbstring
 
-# Allow composer to run as root
-ENV COMPOSER_ALLOW_SUPERUSER 1
-ENV COMPOSER_MEMORY_LIMIT=-1
+# Install Composer
+COPY --from=composer:2.0 /usr/bin/composer /usr/bin/composer
 
-# Clear Composer cache and install dependencies
-RUN composer clear-cache && composer install --optimize-autoloader --no-dev --no-interaction --prefer-dist -vvv
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy application files
+COPY . .
+
+# Install PHP dependencies
+RUN composer install --optimize-autoloader --no-dev
 
 # Set permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Copy the start script
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
-
-CMD ["/start.sh"]
+# Expose port and start php-fpm server
+EXPOSE 9000
+CMD ["php-fpm"]
