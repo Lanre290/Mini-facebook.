@@ -55,6 +55,7 @@ class Views extends Controller{
                 for($i = 0; $i < count($followers); $i++){
                     $follower = $followers[$i];
                     $user = Users::where('id', $follower->follower)->select('id','name', 'email', 'bio', 'image_path', 'cover_img_path')->first();
+                    dd($user);
                     $user->followers = followers::where('following', $follower->follower)->count();
 
                     $following = followers::where('following', $follower->follower)->where('follower', $id)->count();
