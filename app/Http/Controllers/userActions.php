@@ -7,7 +7,7 @@ use Illuminate\Http\Redirect;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Views;
-use App\Models\followers;
+use App\Models\Followers;
 use App\Models\blocked;
 use App\Models\Users;
 use App\Models\Post;
@@ -36,12 +36,12 @@ class userActions extends Controller
             ]);
             $id = $request->id;
     
-            followers::create([
+            Followers::create([
                 'follower' => session('user')->id,
                 'following' => $id,
             ]);
     
-            $followers = followers::where('following', $id)
+            $followers = Followers::where('following', $id)
                                 ->count();
     
             return response()->json(['data' => $followers], 200);
@@ -59,11 +59,11 @@ class userActions extends Controller
 
             $id = $request->id;
 
-            followers::where('follower', session('user')->id)
+            Followers::where('follower', session('user')->id)
                             ->where('following', $id)
                             ->delete();
 
-            $followers = followers::where('following', $id)
+            $followers = Followers::where('following', $id)
                             ->count();
 
             return response()->json(['data' => $followers], 200);
@@ -159,24 +159,24 @@ class userActions extends Controller
 
     public function getFollowers(Request $request){
         if(session('user')){
-            $people = followers::where('following', session('user')->id)->get();
+            $people = Followers::where('following', session('user')->id)->get();
             $count = 0;
 
             foreach ($people as $person) {
                 $person->id = $person->follower;
-                $isFollowing = followers::where('following',$person->id)
+                $isFollowing = Followers::where('following',$person->id)
                             ->where('follower', session('user')->id)
                             ->count();
                 if ($isFollowing > 0) {
                     $person->is_following = true;
                 }
-                $isFollowed = followers::where('follower',$person->id)
+                $isFollowed = Followers::where('follower',$person->id)
                             ->where('following', session('user')->id)
                             ->count();
                 if ($isFollowed > 0) {
                     $person->followed = true;
                 }
-                $followers = followers::where('following',$person->id)
+                $followers = Followers::where('following',$person->id)
                             ->count();
                 $person->followers = $followers;
 

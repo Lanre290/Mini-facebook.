@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Redirect;
 use Illuminate\Http\Response;
 use App\Models\Users;
-use App\Models\followers;
+use App\Models\Followers;
 use App\Models\Post;
 use App\Models\blocked;
 use App\Models\PostFiles;
@@ -25,9 +25,9 @@ class Views extends Controller{
             $exists = Users::where('id', $id)->count();
             if($exists > 0){
                 $data = Users::where('id', $id)->select('id','name', 'email', 'bio', 'image_path','cover_img_path')->first();
-                $followers = followers::where('following',$id)
+                $followers = Followers::where('following',$id)
                                 ->count();
-                $following = followers::where('follower',$id)
+                $following = Followers::where('follower',$id)
                                 ->count();
                 if($data->image_path == ''){
                     $data->image_path = asset('img/users_dp/default.png');
@@ -45,20 +45,20 @@ class Views extends Controller{
                 $data->id = $id;
 
                 if($id !== session('user')->id){
-                    $is_following = followers::where('following', $id)->where('follower', session('user')->id)->count();
+                    $is_following = Followers::where('following', $id)->where('follower', session('user')->id)->count();
                     $data->is_following = $is_following > 0;
                 }
 
                 $posts = Post::where('user',$id)->orderBy('timestamp', 'DESC')->get();
 
-                $followers = followers::where('following', $id)->get();
+                $followers = Followers::where('following', $id)->get();
                 for($i = 0; $i < count($followers); $i++){
                     $follower = $followers[$i];
                     $user = Users::where('id', $follower->follower)->select('id','name', 'email', 'bio', 'image_path', 'cover_img_path')->first();
                     dd($user);
-                    $user->followers = followers::where('following', $follower->follower)->count();
+                    $user->followers = Followers::where('following', $follower->follower)->count();
 
-                    $following = followers::where('following', $follower->follower)->where('follower', $id)->count();
+                    $following = Followers::where('following', $follower->follower)->where('follower', $id)->count();
                     $user->is_following = $following > 0;
 
 
@@ -88,7 +88,7 @@ class Views extends Controller{
             $count = 0;
 
             foreach ($people as $person) {
-                $isFollowing = followers::where('following',$person->id)
+                $isFollowing = Followers::where('following',$person->id)
                             ->where('follower', session('user')->id)
                             ->count();
                 $isBlocked = $this->isBlocked($person->id);
@@ -98,7 +98,7 @@ class Views extends Controller{
                 if($person->image_path == ''){
                     $person->image_path = asset('img/users_dp/person.png');
                 }
-                $followers = followers::where('following',$person->id)
+                $followers = Followers::where('following',$person->id)
                             ->count();
                 if ($isFollowing > 0) {
                     $person->is_following = true;
@@ -190,7 +190,7 @@ class Views extends Controller{
 
         $count = 0;
         foreach ($userResult as $person) {
-            $isFollowing = followers::where('following',$person->id)
+            $isFollowing = Followers::where('following',$person->id)
                         ->where('follower', session('user')->id)
                         ->count();
             $isBlocked = $this->isBlocked($person->id);
@@ -200,7 +200,7 @@ class Views extends Controller{
             if($person->image_path == ''){
                 $person->image_path = asset('img/users_dp/person.png');
             }
-            $followers = followers::where('following',$person->id)
+            $followers = Followers::where('following',$person->id)
                         ->count();
             if ($isFollowing > 0) {
                 $person->is_following = true;
