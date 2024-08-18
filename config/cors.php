@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS','PATCH'],
 
-    'allowed_origins' => ['https://connect-8784.onrender.com','*'],
+    'allowed_origins' => ['https://connect-8784.onrender.com','http://127.0.0.1:8000/'],
 
     'allowed_origins_patterns' => [],
 
