@@ -28,7 +28,7 @@ async function validateSignIn(event){
         const formData = new FormData(form);
 
         try {
-            const response = await fetch("https://connect-8784.onrender.com/auth/login", {
+            const response = await fetch("auth/login", {
                 method: 'POST',
                 body: formData,
                 headers: {

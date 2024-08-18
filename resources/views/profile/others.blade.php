@@ -18,9 +18,9 @@
             @endif
         </h3>
         @if ($data->is_following)
-            <button class="bg-red-500 rounded-md h-10 mb-2 text-gray-50 shadow-md cursor-pointer w-5/6 md:w-64 hover:bg-red-600 disabled:bg-red-200 profile-page" data-id="{{ $data->id }}" onclick="unFollow(this,{{ $data->id }})">Unfollow</button>
+            <button class="bg-red-500 rounded-md h-10 mb-2 ml-5 text-gray-50 shadow-md cursor-pointer w-5/6 md:w-64 hover:bg-red-600 disabled:bg-red-200 profile-page" data-id="{{ $data->id }}" onclick="unFollow(this,{{ $data->id }})">Unfollow</button>
         @else
-            <button class="bg-blue-600 rounded-md h-10 mb-2 text-gray-50 shadow-md cursor-pointer w-5/6 md:w-64 hover:bg-blue-700 disabled:bg-blue-200 profile-page" data-id="{{ $data->id }}" onclick="follow(this,{{ $data->id }})">Follow</button>
+            <button class="bg-blue-600 rounded-md h-10 mb-2 ml-5 text-gray-50 shadow-md cursor-pointer w-5/6 md:w-64 hover:bg-blue-700 disabled:bg-blue-200 profile-page" data-id="{{ $data->id }}" onclick="follow(this,{{ $data->id }})">Follow</button>
         @endif
         <div class="flex flex-row ml-5">
             <div class="text-gray-800 mr-5" id="followers">
