@@ -15,6 +15,8 @@ use App\Models\Likes;
 use App\Models\PostFiles;
 use App\Models\savedPost;
 use App\Models\Comments;
+use App\Models\Messages;
+use App\Models\deletedMessages;
 
 
 date_default_timezone_set('Africa/Lagos');
@@ -116,13 +118,13 @@ class userActions extends Controller
                 $imageName = Users::where('id', $id)->pluck('id')->first() . '.png';
                 $coverImageName = Users::where('id', $id)->pluck('id')->first() . '.png';
                 
-                if($image){
+                if($image !== null){
                     $image->move(public_path('img/users_dp'), $imageName);
                     $image_path = 'img/users_dp/' . $imageName;
                     $imageChanged = true;
                 }
 
-                if($coverImageName){
+                if($coverImageName !== null){
                     $cover_image->move(public_path('img/cover_images'), $coverImageName);
                     $cover_image_path = 'img/cover_images/' . $coverImageName;
                     $cimageChanged = true;
@@ -139,9 +141,9 @@ class userActions extends Controller
                     session('user')->name = $name;
                     session('user') ->bio = $bio;
                     $cimageChanged == true ? session('user')->cover_img_path = $cover_image_path : '';
-                    $imageChanged == true ? session('user') ->image_path = $image_path : '';
+                    $imageChanged == true ? session('user')->image_path = $image_path : '';
     
-                    return response()->json(['data' => true]); 
+                    return response()->json(['dat' => true]); 
                 }
                 else{
                     return response()->json(['data' => false], 500); 
@@ -150,7 +152,7 @@ class userActions extends Controller
             else{
                 return redirect(route('login'));
             }
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json(['data' => $th]); 
         }
     }
@@ -389,6 +391,46 @@ class userActions extends Controller
         }
         else{
             return redirect(route('login'));
+        }
+    }
+
+    public function sendMessage(Request $request){
+        $request->vaidate([
+            'message' => 'string|required',
+            'receiver' => 'string|required',
+            'status' => 'string|required'
+        ]);
+
+        $message = $request->message;
+        $receiver = $request->receiver;
+        $user = session('user')->id;
+        $status = $request->status;
+        $months = ['','January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        $year = (int)date("Y");
+        $month = (int)date("m");
+        $month = $months[$month];
+        $day = (int)date("d");
+        $hour = (int)date('G');
+        $minute = (int)date('i');
+
+        $query = Messages::create([
+            'text' => $message,
+            'sender' => $user,
+            'receiver' => $receiver,
+            'status' => $status,
+            'year' => $year,
+            'month' => $month,
+            'day' => $day,
+            'hour' => $hour,
+            'minute' => $minute,
+            'timestamp' => time()
+        ]);
+
+        if($query){
+            return response()->json(['data' => true], 200);
+        }
+        else{
+            return response()->json(['error' => 'error connecting to database.'], 405);
         }
     }
 }

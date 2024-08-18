@@ -425,6 +425,8 @@ async function saveUserChanges(elem, event) {
         });
 
         if (response.ok) {
+            let res = await response.json();
+            console.log(res);
             toastr.info('Account updated successfully.');
 
             document.getElementById('user-name-text').innerText = formData.get('name');
@@ -533,6 +535,16 @@ function logout(){
 function toggleUserOptions(element){
     let target = element.parentElement.querySelector('#options');
     if(target.style.display == 'none'){
+        target.style.display = 'flex';
+    }
+    else{
+        target.style.display = 'none';
+    }
+}
+
+function showMessageOption(element){
+    let target = element.nextElementSibling;
+    if (target.style.display == 'none') {
         target.style.display = 'flex';
     }
     else{

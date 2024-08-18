@@ -70,7 +70,7 @@ class AuthController extends Controller
                     $Hashedpwd = Users::where('email', $email)->pluck('pwd')->first();
                     
                     if(Hash::check($pwd, $Hashedpwd)){
-                        $userData = Users::where('email', $email)->select('id','email','name','bio','image_path')->first();
+                        $userData = Users::where('email', $email)->select('id','email','name','bio','image_path','cover_img_path')->first();
                         session(['user' => $userData]);
                         if(session('user')->image_path == ''){
                             session('user')->image_path = asset('img/users_dp/default.png');

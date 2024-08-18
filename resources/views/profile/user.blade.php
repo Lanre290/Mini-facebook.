@@ -1,6 +1,7 @@
 
 @include('includes.session')
 
+
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="w-full sm:w-full md:w-full lg:w-9/12 z-10flex flex-col h-full justify-start bg-cover bg-center bg-no-repeat overflow-y-auto pb-5">
     <div class="flex flex-col">
