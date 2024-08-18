@@ -63,12 +63,12 @@ Welcome to **Connect**! This project is a lightweight social networking platform
 
 ## 🎨 Screenshots
 
-![Profile Page](screenshots/screenshot(78).png)
-![Make post Page](screenshots/screenshot(79).png)
-![edit profile Page](screenshots/screenshot(80).png)
-![Post Page](screenshots/screenshot(81).png)
-![Home Page](screenshots/screenshot(82).png)
-![Message Page](screenshots/screenshot(83).png)
+![Profile Page](Screenshots/Screenshot(78).png)
+![Make post Page](Screenshots/Screenshot(79).png)
+![edit profile Page](Screenshots/Screenshot(80).png)
+![Post Page](Screenshots/screenshot(81).png)
+![Home Page](Screenshots/screenshot(82).png)
+![Message Page](Screenshots/screenshot(83).png)
 
 ## 🤝 Contributing
 
