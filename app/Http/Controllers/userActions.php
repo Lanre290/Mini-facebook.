@@ -13,7 +13,7 @@ use App\Models\Users;
 use App\Models\Post;
 use App\Models\Likes;
 use App\Models\PostFiles;
-use App\Models\savedPost;
+use App\Models\SavedPost;
 use App\Models\Comments;
 use App\Models\Messages;
 use App\Models\deletedMessages;
@@ -21,7 +21,7 @@ use App\Models\deletedMessages;
 
 date_default_timezone_set('Africa/Lagos');
 
-class userActions extends Controller
+class UserActions extends Controller
 {
     protected $Views;
     public function __construct(Views $Views){
@@ -282,19 +282,19 @@ class userActions extends Controller
             ]);
             $id = $request->id;
 
-            $isSaved = savedPost::where('user', session('user')->id)->where('post', $id)->count();
+            $isSaved = SavedPost::where('user', session('user')->id)->where('post', $id)->count();
     
             if($isSaved == 0){
-                savedPost::create([
+                SavedPost::create([
                     'user' => session('user')->id,
                     'post' => $id,
                 ]);
             }
             else{
-                savedPost::where('user', session('user')->id)->where('post', $id)->delete();
+                SavedPost::where('user', session('user')->id)->where('post', $id)->delete();
             }
 
-            $isStillSaved = savedPost::where('user', session('user')->id)->where('post', $id)->count();
+            $isStillSaved = SavedPost::where('user', session('user')->id)->where('post', $id)->count();
     
             return response()->json(['data' => true, 'isSaved' => $isStillSaved > 0], 200);
         }
