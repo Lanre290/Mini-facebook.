@@ -63,7 +63,12 @@ Welcome to **Connect**! This project is a lightweight social networking platform
 
 ## 🎨 Screenshots
 
-*Add screenshots of your app here to showcase the interface and features.*
+![Profile Page](screenshots/screensht(78).png)
+![Make post Page](screenshots/screensht(79).png)
+![edit profile Page](screenshots/screensht(80).png)
+![Post Page](screenshots/screensht(81).png)
+![Home Page](screenshots/screensht(82).png)
+![Message Page](screenshots/screensht(83).png)
 
 ## 🤝 Contributing
 
