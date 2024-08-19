@@ -80,4 +80,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## 👨‍💻 Author
 
-**Your Name** - [GitHub Profile](https://github.com/lanre290)
+**Ashiru Olanrewaju** - [GitHub Profile](https://github.com/lanre290)
