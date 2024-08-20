@@ -461,6 +461,7 @@ async function saveUserChanges(elem, event) {
             if (userImage.name != '') {
                 const userImageUrl = await getImage(userImage);
                 document.getElementById('user-dp-img').style.backgroundImage = `url('${userImageUrl}')`;
+                document.getElementById('sidebar-dp').style.backgroundImage = `url('${userImageUrl}')`;
             }
 
             btn.disabled = false;

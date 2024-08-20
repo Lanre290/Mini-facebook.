@@ -2,31 +2,31 @@
 
 <div class="w-0 sm:w-0 md:w-0 lg:w-3/12 hidden z-10 py-10 sm:hidden md:hidden lg:flex flex-col h-full justify-between">
     <ul class="w-full flex flex-col items-start px-5">
-            <li class="w-min rounded-3xl text-center cursor-pointer bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='home_nav'>
+            <li class="w-full rounded-3xl mb-5 text-center cursor-pointer  bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='profile_nav'>
+                <a href='{{ route('profile', ['id' => $id]) }}' class='w-full h-full py-3 px-6 flex flex-row items-center justify-left'>
+                    <div class="bg-center bg-no-repeat bg-cover rounded-full w-10 h-10 min-w-10 min-h-10 mx-4" id="sidebar-dp" style="background-image: url('{{ asset(session('user')->image_path) }}');min-height: 2.5rem;min-width:2.5rem;"></div>
+                    <h3 class="hidden font-bold whitespace-nowrap overflow-hidden lg:flex" style="text-overflow: ellipsis;">{{ session('user')->name }}</h3>
+                </a>
+            </li>
+            <li class="w-full rounded-3xl text-center cursor-pointer  bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='home_nav'>
                 <a href='{{ route('home')}}' class='w-full h-full py-3 px-6 flex flex-row items-center justify-left'>
                     <div class="bg-center bg-no-repeat bg-cover w-10 h-10 mx-4" style="background-image: url('{{ asset('img/3d-house.png') }}')"></div>
                     <h3 class="hidden lg:flex">Home</h3>
                 </a>
             </li>
-            <li class="w-min rounded-3xl text-center cursor-pointer bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='profile_nav'>
-                <a href='{{ route('profile', ['id' => $id]) }}' class='w-full h-full py-3 px-6 flex flex-row items-center justify-left'>
-                    <div class="bg-center bg-no-repeat bg-cover w-10 h-10 mx-4" style="background-image: url('{{ asset('img/user.png') }}')"></div>
-                    <h3 class="hidden lg:flex">Profile</h3>
-                </a>
-            </li>
-            <li class="w-min rounded-3xl text-center cursor-pointer bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='people_nav'>
+            <li class="w-full rounded-3xl text-center cursor-pointer  bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='people_nav'>
                 <a href='{{ route('people')}}' class='w-full h-full py-3 px-6 flex flex-row items-center justify-left'>
                     <div class="bg-center bg-no-repeat bg-cover w-10 h-10 mx-4" style="background-image: url('{{ asset('img/social.png') }}')"></div>
                     <h3 class="hidden lg:flex">People</h3>
                 </a>
             </li>
-            <li class="w-min rounded-3xl text-center cursor-pointer bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='saved_nav'>
+            <li class="w-full rounded-3xl text-center cursor-pointer  bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='saved_nav'>
                 <a href='{{ route('saved')}}' class='w-full h-full py-3 px-6 flex flex-row items-center justify-left'>
                     <div class="bg-center bg-no-repeat bg-cover w-10 h-10 mx-4" style="background-image: url('{{ asset('img/bookmark.png') }}')"></div>
                     <h3 class="hidden lg:flex">Saved</h3>
                 </a>
             </li>
-            <li class="w-min rounded-3xl text-center cursor-pointer bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='messages_nav'>
+            <li class="w-full rounded-3xl text-center cursor-pointer  bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='messages_nav'>
                 <a href='{{ route('messages')}}' class='w-full h-full py-3 px-6 flex flex-row items-center justify-left'>
                     <div class="bg-center bg-no-repeat bg-cover w-10 h-10 mx-4" style="background-image: url('{{ asset('img/chat.png') }}')"></div>
                     <h3 class="hidden lg:flex">Messages</h3>

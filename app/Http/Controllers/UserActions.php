@@ -144,7 +144,7 @@ class UserActions extends Controller
                     $cimageChanged == true ? session('user')->cover_img_path = $cover_image_path : '';
                     $imageChanged == true ? session('user')->image_path = $image_path : '';
     
-                    return response()->json(['dat' => true]); 
+                    return response()->json(['dat' => true,'user'=> session('user')]); 
                 }
                 else{
                     return response()->json(['data' => false], 500); 
