@@ -1,4 +1,9 @@
 @include('includes.session')
+@if (count($data) == 0)
+    <div class="w-full h-full flex justify-center">
+        <div class="mx-auto text-3xl">You're all caught up. 🙃</div>
+    </div>
+@endif
 @foreach ($data as $post)
     <div class="w-full sm:w-4/6 lg:w-3/6 min-h-full h-full sm:rounded-xl m-auto my-4">
         <div class="flex flex-col items-center h-full w-full">
@@ -67,7 +72,10 @@
                                     </div>
                                 @endif
                             @else
-                                <div class="h-full w-full min-h-full min-w-full flex items-center justify-center object-cover">File not found. ☹️</div>
+                                <div class="h-full w-full min-h-full min-w-full flex flex-col items-center justify-center object-cover">
+                                    <div class="text-8xl"><i class="fa fa-chain-broken"></i></div>
+                                    <div class="text-5xl">File not found. ☹️</div>
+                                </div>
                             @endif
                         @endforeach
                     @else

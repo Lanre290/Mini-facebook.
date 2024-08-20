@@ -283,12 +283,12 @@ async function submitPostComment(element, event){
 
 
     if (response.ok) {
-        console.log(response);
         let res = await response.json();
         if(res.data == true){
             toastr.info('comment saved');
             element.parentElement.previousElementSibling.querySelector('#comment-text').innerText = `${res.comments} Comments`;
             element.querySelector('input[name="text"]').value = '';
+            validateCommentButton(element.querySelector('.comment-box'));
             element.querySelector('input[name="text"]').blur();
 
             if(element.classList.contains('real-post-comment')){
@@ -306,13 +306,19 @@ async function submitPostComment(element, event){
                                         <a href="/profile/${comment.user.id}" class="text-gray-600 text-xs hover:text-blue-600 hover:underline">${comment.user.name}</a>
                                         <h3 class="text-gray-600">${comment.text}</h3>
                                     </div>
-                                    ${comment.by_user == true ? `<input type="hidden" name="delete-comment-token" value="${comment.tk}">` : ''}
-                                    <h3 class="text-gray-600 text-xs w-fit ml-3 cursor-pointer hover:text-blue-600 hover:underline" data-id="${comment.id}" onclick="deleteComment(this)">Delete</h3>
+                                    <div class="flex flex-row mt-1">
+                                        <h3 class="text-xs text-gray-600 ml-2">${comment.date}</h3>
+                                        <input type="hidden" name="like-comment-token" value="${comment.tk}">
+                                        <img src="${comment.isLiked == true ? comment.heart : comment.like}" alt="Like" class=" m-2 mt-0 mr-0 w-4 h-4 cursor-pointer grayscale post-btns" data-liked="${comment.isLiked == true ? true : false}" data-id="${comment.id}" onclick="likeComment(this)"/>
+                                        <h3 class="text-xs text-gray-600 ml-2"> ${comment.no_of_likes} Likes </h3>
+                                            ${comment.by_user == true ? `<input type="hidden" name="delete-comment-token" value="${comment.tk}">` : ''}
+                                            ${comment.by_user == true ? `<h3 class="text-gray-600 text-xs w-fit ml-2 cursor-pointer hover:text-blue-600 hover:underline" data-id="${comment.id}" onclick="deleteComment(this)">Delete</h3>` : ''}
+                                    </div>
                                 </div>        
                             </div>
                         `;
                     });
-                    element.parentElement.parentElement.parentElement.previousElementSibling.innerHTML.scrollBy({left: '', top: 999999999999999, behavior: 'smooth'});
+                    element.parentElement.parentElement.parentElement.previousElementSibling.scrollBy({left: '', top: 999999999999999, behavior: 'smooth'});
                 }
                 else{
                     element.parentElement.parentElement.parentElement.previousElementSibling.innerHTML = 
@@ -321,6 +327,8 @@ async function submitPostComment(element, event){
                     <h3 class="text-gray-600 mx-auto">No Comments on this post</h3>`;
                 }
             }
+
+            element.querySelector('button').disabled = true;
         }
         else{
             toastr.error('Error.')
@@ -393,7 +401,7 @@ async function deleteComment(element){
         let res = await response.json();
         if(res.data == true){
             toastr.info('Comment deleted successfully.');
-            element.parentElement.parentElement.style.display = 'none';
+            element.parentElement.parentElement.parentElement.style.display = 'none';
         }
         else{
             toastr.error(res.data);
@@ -549,5 +557,33 @@ function showMessageOption(element){
     }
     else{
         target.style.display = 'none';
+    }
+}
+
+async function likeComment(element){
+    let id = element.dataset.id;
+
+    var formData = new FormData();
+    formData.append('id', id)
+    const response = await fetch("/api/like-comment", {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('input[name="like-comment-token"]').value
+        }
+    });
+
+    if(response.ok){
+        let res = await response.json();
+        element.nextElementSibling.innerText = `${res.number} Likes.`;
+
+        if(element.dataset.liked == "true"){
+            element.dataset.liked = "false";
+            element.src = res.like;
+        }
+        else{
+            element.dataset.liked = "true";
+            element.src = res.heart;
+        }
     }
 }

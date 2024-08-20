@@ -2,7 +2,27 @@
     @include('includes.header-script', ['url' => $post->user->name.' - '.$post->text])
     @include('includes.session')
 
-    <div class="fixed top-0 right-0 bottom-0 left-0 h-full w-full flex flex-col sm:flex-row">
+    <div class="fixed top-0 right-0 bottom-0 left-0 h-full w-full flex flex-col sm:flex-row overflow-y-auto">
+        <div class="md:hidden flex-row justify-between w-full h-full py-2 px-2 flex bg-gray-200">
+            <div class="flex flex-row items-center justify-center">
+                <a href="{{ route('profile', ['id' => $post->user->id]) }}" class="h-12 w-12 rounded-full cursor-pointer bg-gray-400 mr-1 bg-center bg-cover bg-no-repeat" style="background-image: url('{{ $post->user->image_path }}')"></a>
+                <div class="flex flex-col">
+                    <a href="{{ route('profile', ['id' => $post->user->id]) }}" class=""><h3 class="text-gray-600 ml-1 hover:text-blue-600">{{ $post->user->name }} </h3></a>
+                    <h3 class="text-gray-600 ml-1 text-xs">{{ $post->date }}</h3>
+                </div>
+            </div>
+            <div class="flex flex-row m-3">
+                <div class="flex flex-col relative">
+                    <button class="p-3 h-12 w-12 px-4 rounded-full cursor-pointer bg-transparent text-gray-600 mr-1 hover:bg-gray-400 hover:bg-opacity-50" onclick="showPostOption(this)"><i class="fa fa-ellipsis-h"></i></button>
+                    <div class="flex-col w-40 absolute top-14 -right-1/4 bg-gray-300 z-50 rounded-lg" style="display: none;">
+                        <button class="w-full h-12 text-gray-600 cursor-pointer hover:bg-gray-400 hover:bg-opacity-50 {{ $post->user->id == session('user')->id ? 'rounded-tl-lg rounded-tr-lg' : 'rounded-lg' }}" data-rel="{{ route('post', ['id' => $post->id]) }}" onclick="copyPostUrl(this)"><i class="fa fa-link"></i> Copy Url</button>
+                        @if ($post->user->id == session('user')->id)
+                            <button class="w-full h-12 text-gray-600 cursor-pointer hover:bg-gray-400 hover:bg-opacity-50 rounded-bl-lg rounded-br-lg main-post" onclick="deletePost(this,{{ $post->id }})"><span class="text-red-600"><i class="fa fa-archive"></i> </span>Delete Post</button>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="h-full w-full sm:w-4/6 bg-gray-100 bg-cover bg-no-repeat bg-center relative post-div scroll-smooth">
             @if (count($post->files) > 1)
                 <button class="w-10 h-10 text-gray-500 bg-transparent hover:bg-gray-400 hover:bg-opacity-50 absolute top-1/2 left-1 z-50 prev-post">
@@ -38,7 +58,10 @@
                                 </div>
                             @endif
                         @else
-                            <div class="h-full w-full min-h-full min-w-full flex items-center justify-center object-cover">File not found. ☹️</div>
+                            <div class="h-screen w-screen min-h-screen min-w-screen flex flex-col items-center justify-center object-cover">
+                                <div class="text-8xl"><i class="fa fa-chain-broken"></i></div>
+                                <div class="text-5xl">File not found. ☹️</div>
+                            </div>
                         @endif
                     @endforeach
                 @else
@@ -50,7 +73,7 @@
 
         <div class="w-full sm:w-2/6 flex flex-col">
             <div class="w-full md:h-1/6 flex flex-col items-center">
-                <div class="flex flex-row justify-between w-full h-full py-2 px-2 bg-gray-200">
+                <div class="md:flex flex-row justify-between w-full h-full py-2 px-2 hidden bg-gray-200">
                     <div class="flex flex-row items-center justify-center">
                         <a href="{{ route('profile', ['id' => $post->user->id]) }}" class="h-12 w-12 rounded-full cursor-pointer bg-gray-400 mr-1 bg-center bg-cover bg-no-repeat" style="background-image: url('{{ $post->user->image_path }}')"></a>
                         <div class="flex flex-col">
@@ -87,10 +110,16 @@
                                     <a href="{{ route('profile', ['id' => $comment->user->id]) }}" class="text-gray-600 text-xs hover:text-blue-600 hover:underline flex flex-row">  <h3 class="text-blue-600">{{ $comment->by_creator == true ? 'Creator • ' : '' }}</h3>{{$comment->user->id == session('user')->id ? 'You' : $comment->user->name }}</a>
                                     <h3 class="text-gray-600">{{ $comment->text }}</h3>
                                 </div>
-                                @if ($comment->user->id == session('user')->id)
-                                    <input type="hidden" name="delete-comment-token" value="{{ csrf_token() }}">
-                                    <h3 class="text-gray-600 text-xs w-fit ml-3 cursor-pointer hover:text-blue-600 hover:underline" data-id="{{ $comment->id }}" onclick="deleteComment(this)">Delete</h3>
-                                @endif
+                                <div class="flex flex-row mt-1">
+                                    <h3 class="text-xs text-gray-600 ml-2"> {{ $comment->date }} </h3>
+                                    <input type="hidden" name="like-comment-token" value="{{ csrf_token() }}">
+                                    <img src="{{ $comment->isLiked == true ? asset('img/heart_.png') : asset('img/like.png') }}" alt="Like" class=" m-2 mt-0 mr-0 w-4 h-4 cursor-pointer grayscale post-btns" data-liked="{{ $comment->isLiked == true ? "true" : "false" }}" data-id="{{ $comment->id }}" onclick="likeComment(this)"/>
+                                    <h3 class="text-xs text-gray-600 ml-2"> {{ $comment->no_of_likes }} Likes </h3>
+                                    @if ($comment->user->id == session('user')->id)
+                                        <input type="hidden" name="delete-comment-token" value="{{ csrf_token() }}">
+                                        <h3 class="text-gray-600 text-xs w-fit ml-2 cursor-pointer hover:text-blue-600 hover:underline" data-id="{{ $comment->id }}" onclick="deleteComment(this)">Delete</h3>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     @endforeach
@@ -114,7 +143,7 @@
                     <div class="flex flex-row w-full p-2">
                         <form action="api/comment" method="post" onsubmit="submitPostComment(this, event)" class="w-full flex flex-row real-post-comment">
                             <input type="hidden" class="hidden" name="comment-token" value="{{ csrf_token() }}">
-                            <input type="text" data-id="{{$post->id}}" name="text" id="" class=" flex flex-grow  p-2 bg-gray-400 bg-opacity-50 rounded-lg" oninput="validateCommentButton(this)" placeholder="Leave a comment">
+                            <input type="text" data-id="{{$post->id}}" name="text" id="" class=" flex flex-grow  p-2 bg-gray-400 bg-opacity-50 rounded-lg comment-box" oninput="validateCommentButton(this)" placeholder="Leave a comment">
                             <button class="cursor-not-allowed w-12 h-12 bg-cover bg-center bg-no-repeat ml-4 rounded-full text-gray-600 text-3xl hover:bg-gray-400 hover:bg-opacity-50 disabled:text-gray-600" disabled><i class="fa fa-paper-plane"></i></button>
                         </form>
                     </div>

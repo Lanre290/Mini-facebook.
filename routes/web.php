@@ -50,6 +50,7 @@ Route::prefix('/api')->group(function(){
     Route::post('comment', [UserActions::class, 'comment'])->name('api/comment');
     Route::post('delete-post', [UserActions::class, 'deletePost'])->name('api/delete-post');
     Route::post('delete-comment', [UserActions::class, 'deleteComment'])->name('api/delete-comment');
+    Route::post('like-comment', [UserActions::class, 'likeComment'])->name('api/like-comment');
 });
 
 Route::prefix('/user')->group(function(){

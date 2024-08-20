@@ -17,6 +17,7 @@ use App\Models\SavedPost;
 use App\Models\Comments;
 use App\Models\Messages;
 use App\Models\deletedMessages;
+use App\Models\LikedComment;
 
 
 date_default_timezone_set('Africa/Lagos');
@@ -431,6 +432,40 @@ class UserActions extends Controller
         }
         else{
             return response()->json(['error' => 'error connecting to database.'], 405);
+        }
+    }
+
+    public function likeComment(Request $request){
+        $request->validate([
+            'id' => 'integer|required'
+        ]);
+
+        $id = $request->id;
+        $query;
+
+        $checkIsLiked = LikedComment::where('user', session('user')->id)
+                                    ->where('comment', $id)
+                                    ->count();
+        if($checkIsLiked > 0){
+            $query = LikedComment::where('user', session('user')->id)
+                                    ->where('comment', $id)
+                                    ->delete();
+        }
+        else{
+            $query = LikedComment::create([
+                'user' => session('user')->id,
+                'comment' => $id
+            ]);
+        }
+
+        $numberOfComment = LikedComment::where('comment', $id)
+                                    ->count();
+
+        if($query){
+            return response()->json(['data' => true,'like' => asset('img/like.png'), 'heart' => asset('img/heart_.png'),'number' => $numberOfComment], 200);
+        }
+        else{
+            return response()->json(['error' => 'error connecting to database.', 500]);
         }
     }
 }

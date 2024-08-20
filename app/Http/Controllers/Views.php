@@ -13,6 +13,7 @@ use App\Models\PostFiles;
 use App\Models\Likes;
 use App\Models\SavedPost;
 use App\Models\Comments;
+use App\Models\LikedComment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -298,7 +299,20 @@ class Views extends Controller{
             $minute = date('i');
             $month = $months[$month];
             $todays_date = $day .' '. $month .' '. $year;
+            $comment->isLiked = false;
 
+            $checkedIsLiked = LikedComment::where('user', session('user')->id)
+                                        ->where('comment', $comment->id)
+                                        ->count();
+
+            $numberOfLikes = LikedComment::where('comment', $comment->id)
+                            ->count();
+
+            $comment->no_of_likes = $numberOfLikes;
+            if($checkedIsLiked > 0){
+                $comment->isLiked = true;
+            }
+            
             $comment->date = $date;
             $user = Users::where('id', $comment->user)->select('id','name', 'email', 'bio', 'image_path')->first();
             $comment->user = $user;
@@ -310,30 +324,32 @@ class Views extends Controller{
             }
 
             if($year == $comment->year && $month == $comment->month && $day == $comment->day && $hour != $comment->hour && $minute != $comment->minute && ($hour - $comment->hour) > 12){
-                $comment->date = 'Today at '. $comment->hour.':'.$comment->minute;
+                $comment->date = $comment->hour.':'.$comment->minute;
             }
             else if($year == $comment->year && $month == $comment->month && $day != $comment->day && $hour != $comment->hour && $minute != $comment->minute && ($day - $comment->day) > 1){
-                $comment->date = ($day - $comment->day). ' days ago.';
+                $comment->date = ($day - $comment->day). ' d';
             }
             else if($year == $comment->year && $month == $comment->month && $day != $comment->day && $hour != $comment->hour && $minute != $comment->minute && ($day - $comment->day) == 1){
-                $comment->date = 'Yesterday at '. $comment->hour.':'.$comment->minute;
+                $comment->date = 'Yesterday';
             }
             else if($year == $comment->year && $month == $comment->month && $day == $comment->day && $hour != $comment->hour){
-                $comment->date = ($hour - $comment->hour). ' hours ago.';
+                $comment->date = ($hour - $comment->hour). ' h';
             }
             else if($year == $comment->year && $month == $comment->month && $day == $comment->day && $hour == $comment->hour && $minute != $comment->minute){
-                $comment->date = ($minute - $comment->minute). ' minutes ago.';
+                $comment->date = ($minute - $comment->minute). ' m';
             }
 
             else if($year == $comment->year && $month == $comment->month && $day == $comment->day && $hour == $comment->hour && $minute == $comment->minute){
                 $comment->date = 'Just now';
             }
             else if($year != $comment->year){
-                $comment->date = ($year - $comment->year). ' years ago.';
+                $comment->date = ($year - $comment->year). ' y';
             }
 
             $comment->by_user = false;
             $comment->tk = '';
+            $comment->heart = asset('img/heart_.png');
+            $comment->like = asset('img/like.png');
             if($comment->user->id == session('user')->id){
                 $comment->by_user = true;
                 $comment->tk = csrf_token();
