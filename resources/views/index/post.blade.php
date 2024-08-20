@@ -23,7 +23,7 @@
                                     <button class="absolute top-1/2 left-1/2 right-1/2 bottom-1/2 text-gray-50 text-7xl cursor-pointer p-6 z-50" id="play-btn" style="transform: translate(-50%, -50%);" onclick="playVideo(this, event)"><i class="fa fa-play"></i></button>
                                     <video src="{{ asset($file->path) }}" class="h-full w-full min-h-full min-w-full bg-black" id="post_video" ontimeupdate="progressPostVideo(this, event)">
                                     </video>
-                                    <div class="absolute w-full flex flex-row justify-end items-end bottom-1 right-0 h-40 left-0 z-50" id="controls">
+                                    <div class="absolute w-full flex flex-row justify-end items-end bottom-3 right-0 h-40 left-0 z-50" id="controls">
                                         <input type="range" class="h-1 cursor-pointer mb-3 m-2 flex-grow white-accent outline-none" id="playback" value="0" oninput="seekPostVideo(this, event)">
                                         <div class="flex flex-col justify-center items-end w-16 h-40 relative post-audio-cont">
                                             <input type="range" class="cursor-pointer white-accent outline-none h-3 w-24 absolute bottom-20 -right-7 -mt-5 ml-3 volume-control hidden" style="transform: rotate(-90deg);" oninput="managePostVolume(this, event)"/>
