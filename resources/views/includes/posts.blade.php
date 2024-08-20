@@ -66,6 +66,8 @@
                                         </div>
                                     </div>
                                 @endif
+                            @else
+                                <div class="h-full w-full min-h-full min-w-full flex items-center justify-center object-cover">File not found. ☹️</div>
                             @endif
                         @endforeach
                     @else
