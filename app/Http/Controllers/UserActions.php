@@ -124,7 +124,7 @@ class UserActions extends Controller
                     $imageChanged = true;
                 }
 
-                if($coverImageName !== null){
+                if($cover_image!== null){
                     $cover_image->move(public_path('img/cover_images'), $coverImageName);
                     $cover_image_path = 'img/cover_images/' . $coverImageName;
                     $cimageChanged = true;
