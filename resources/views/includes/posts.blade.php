@@ -22,7 +22,15 @@
                     <div class="flex flex-col relative">
                         <button class="p-3 h-12 w-12 px-4 rounded-full cursor-pointer bg-transparent text-gray-600 mr-1 hover:bg-gray-400 hover:bg-opacity-50" onclick="showPostOption(this)"><i class="fa fa-ellipsis-h"></i></button>
                         <div class="flex-col w-40 absolute top-14 -right-1/2 bg-gray-300 z-50 rounded-lg" style="display: none;">
-                            <button class="w-full h-12 text-gray-600 cursor-pointer hover:bg-gray-400 hover:bg-opacity-50 {{ $post->user->id == session('user')->id ? 'rounded-tl-lg rounded-tr-lg' : 'rounded-lg' }}" data-rel="{{ route('post', ['id' => $post->id]) }}" onclick="copyPostUrl(this)"><i class="fa fa-link"></i> Copy Url</button>
+                            <button class="w-full h-12 text-gray-600 cursor-pointer hover:bg-gray-400 hover:bg-opacity-50 rounded-tl-lg rounded-tr-lg }}" data-rel="{{ route('post', ['id' => $post->id]) }}" onclick="copyPostUrl(this)"><i class="fa fa-link"></i> Copy Url</button>
+                            
+                            @if ($post->user->is_following == true)
+                                <button class="w-full h-12 text-gray-600 cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap px-3 hover:bg-gray-400 hover:bg-opacity-50 {{ $post->user->id != session('user')->id ? 'rounded-bl-lg rounded-br-lg' : '' }}" onclick="unFollow(this, {{ $post->user->id }})"><i class="fa fa-user-ban"></i> Unfollow {{ $post->user->name }}</button>
+                            @else
+                                <button class="w-full h-12 text-gray-600 cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap px-3 hover:bg-gray-400 hover:bg-opacity-50 {{ $post->user->id != session('user')->id ? 'rounded-bl-lg rounded-br-lg' : '' }}" onclick="follow(this, {{ $post->user->id }})"><i class="fa fa-user-add"></i> Follow {{ $post->user->name }}</button>
+                            @endif
+
+                            {{-- delete post button --}}
                             @if ($post->user->id == session('user')->id)
                                 <button class="w-full h-12 text-gray-600 cursor-pointer hover:bg-gray-400 hover:bg-opacity-50 rounded-bl-lg rounded-br-lg" onclick="deletePost(this,{{ $post->id }})"><span class="text-red-600"><i class="fa fa-archive"></i> </span>Delete Post</button>
                             @endif

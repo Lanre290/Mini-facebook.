@@ -134,8 +134,8 @@ class UserActions extends Controller
                 $update = Users::where('id', $id)->update([
                     'name' => $name,
                     'bio' => $bio,
-                    'image_path' => $image_path,
-                    'cover_img_path' => $cover_image_path
+                    'image_path' => $image == null ? session('user')->image_path : $image_path,
+                    'cover_img_path' => $cover_image == null ? session('user')->cover_img_path : $cover_image_path
                 ]);
     
                 if($update){
@@ -144,7 +144,7 @@ class UserActions extends Controller
                     $cimageChanged == true ? session('user')->cover_img_path = $cover_image_path : '';
                     $imageChanged == true ? session('user')->image_path = $image_path : '';
     
-                    return response()->json(['dat' => true,'user'=> session('user')]); 
+                    return response()->json(['data' => true,'user'=> session('user')]); 
                 }
                 else{
                     return response()->json(['data' => false], 500); 

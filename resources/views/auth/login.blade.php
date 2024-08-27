@@ -1,3 +1,9 @@
+@if (null !== session('user'))
+    <script>
+        window.location.replace('/home');
+    </script>
+@endif
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

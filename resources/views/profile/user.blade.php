@@ -42,29 +42,64 @@
             <li class="py-2 px-5 cursor-pointer rounded-lg m-1 hover:bg-gray-300 hover:bg-opacity-50 user-deets-btn" id='posts-btn'>Posts</li>
             <li class="py-2 px-5 cursor-pointer rounded-lg m-1 hover:bg-gray-300 hover:bg-opacity-50 user-deets-btn" id='followers-btn'>Followers</li>
             <li class="py-2 px-5 cursor-pointer rounded-lg m-1 hover:bg-gray-300 hover:bg-opacity-50 user-deets-btn" id='videos-btn'>Videos</li>
+            <li class="py-2 px-5 cursor-pointer rounded-lg m-1 hover:bg-gray-300 hover:bg-opacity-50 user-deets-btn" id='img-btn'>Pictures</li>
         </ul>
     </div>
     <div class="w-full z-10 py-10 flex flex-col h-full pb-5 justify-between" id='posts-cont'>
         @include('includes.posts',['data' => $posts])
     </div>
 
-    <div class="w-full flex flex-wrap content-start items-start justify-center h-full min-h-screen user-posts-conts" id='videos-cont' style="display: none;">
-        <div class="relative w-1/4 h-2/5 m-1 bg-center bg-cover bg-no-repeat cursor-pointer">
-            <i class="fa fa-play text-3xl top-1 right-1 text-gray-50"></i>
-            <video src="{{ asset('clips/clip_1.mp4') }}" class="h-full w-full max-h-full max-w-full absolute top-0 bottom-0 right-0 left-0 object-cover" autoplay loop muted></video>
-            <div class="absolute bg-opacity-0 opacity-0 z-10 bg-gray-600 top-0 bottom-0 right-0 left-0 cursor-pointer hover:bg-opacity-50 hover:opacity-100 flex justify-center items-center">
-                <div class="flex flex-row">
-                    <span class="mr-2 text-gray-50 text-2xl">
-                        <i class="fa fa-heart"></i>
-                        200
-                    </span>
-                    <span class="mr-2 text-gray-50 text-2xl">
-                        <i class="fa fa-comment"></i>
-                        200
-                    </span>
-                </div>
+    <div class="w-full flex flex-wrap content-start items-start justify-center user-posts-conts" id='videos-cont' style="display: none;">
+        @if (count($videos) == 0)
+            <div class="w-full flex flex-col items-center">
+                <img src="{{ asset('img/empty-box.png') }}" alt="no saved post" class="w-32 h-32 object-contain mx-auto mt-10" />
+                <h3 class="text-gray-600 mx-auto text-2xl">No videos found for this account. ☹️</h3>
             </div>
-        </div>
+        @endif
+        @foreach ($videos as $video)
+            <a class="relative w-1/4 h-56 m-1 bg-center bg-cover bg-no-repeat cursor-pointer" href = "{{ route('post', ['id' => $video->post_id]) }}">
+                <i class="fa fa-play text-3xl top-1 right-1 text-gray-50"></i>
+                <video src="{{ asset($video->path) }}" class="h-full w-full max-h-full max-w-full absolute top-0 bottom-0 right-0 left-0 object-cover" autoplay loop muted></video>
+                <div class="absolute bg-opacity-0 opacity-0 z-10 bg-gray-600 top-0 bottom-0 right-0 left-0 cursor-pointer hover:bg-opacity-50 hover:opacity-100 flex justify-center items-center">
+                    <div class="flex flex-row">
+                        <span class="mr-2 text-gray-50 text-2xl">
+                            <i class="fa fa-heart"></i>
+                            {{$video->likes}}
+                        </span>
+                        <span class="mr-2 text-gray-50 text-2xl">
+                            <i class="fa fa-comment"></i>
+                            {{$video->comments}}
+                        </span>
+                    </div>
+                </div>
+            </a>
+        @endforeach
+    </div>
+    <div class="w-full flex flex-wrap content-start items-start justify-center user-posts-conts" id='img-cont' style="display: none;">
+        @if (count($images) == 0)
+            <div class="w-full flex flex-col items-center">
+                <img src="{{ asset('img/empty-box.png') }}" alt="no saved post" class="w-32 h-32 object-contain mx-auto mt-10" />
+                <h3 class="text-gray-600 mx-auto text-2xl">No images found for this account. ☹️</h3>
+            </div>
+        @endif
+        @foreach ($images as $image)
+            <a class="relative w-1/4 h-56 m-1 bg-center bg-cover bg-no-repeat cursor-pointer" href = "{{ route('post', ['id' => $image->post_id]) }}">
+                <i class="fa fa-play text-3xl top-1 right-1 text-gray-50"></i>
+                <image src="{{ asset($image->path) }}" class="h-full w-full max-h-full max-w-full absolute top-0 bottom-0 right-0 left-0 object-cover" autoplay loop muted></image>
+                <div class="absolute bg-opacity-0 opacity-0 z-10 bg-gray-600 top-0 bottom-0 right-0 left-0 cursor-pointer hover:bg-opacity-50 hover:opacity-100 flex justify-center items-center">
+                    <div class="flex flex-row">
+                        <span class="mr-2 text-gray-50 text-2xl">
+                            <i class="fa fa-heart"></i>
+                            {{$image->likes}}
+                        </span>
+                        <span class="mr-2 text-gray-50 text-2xl">
+                            <i class="fa fa-comment"></i>
+                            {{$image->comments}}
+                        </span>
+                    </div>
+                </div>
+            </a>
+        @endforeach
     </div>
 
     <div class="w-full flex content-start items-start h-full min-h-screen user-posts-conts {{ count($followers) > 0 ? 'flex-wrap justify-center' : 'flex-col justify-start' }}" id='followers-cont' style="display: none;">
@@ -145,6 +180,9 @@
                 document.getElementById('followers-cont').style.display = 'flex';
                 document.getElementById('posts-cont').style.display = 'none';
                 document.getElementById('videos-cont').style.display = 'none';
+            }
+            else if(element.id == 'img-btn'){
+                document.getElementById('img-cont').style.display = 'flex';
             }
 
             element.classList.add('active-place');

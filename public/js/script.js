@@ -469,7 +469,6 @@ async function saveUserChanges(elem, event) {
             btn.style.cursor = 'default';
             btn.innerHTML = 'Submit';
         } else {
-            console.log(response);
             let res = await response.json();
             console.error('Error:', res);
             toastr.error('Error connecting to database.');

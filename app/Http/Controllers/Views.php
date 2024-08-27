@@ -52,6 +52,29 @@ class Views extends Controller{
 
                 $posts = Post::where('user',$id)->orderBy('timestamp', 'DESC')->get();
 
+                $videos = [];
+                $images = [];
+
+                foreach($posts as $post){
+                    $files = PostFiles::where('post_id', $post->id)->get();
+                    foreach($files as $file){
+                        try {
+                            $comments = Comments::where('post', $post->id)->count();
+                            $likes = Likes::where('user', session('user')->id)->where('post', $post->id)->count();
+                            $arr = (object)['path' => $file->path, 'likes' => $likes, 'comments' => $comments,'post_id' => $post->id];
+                            if(strpos(mime_content_type($file->path), 'image/') === 0){
+                                array_push($images, $arr);
+                            }
+                            else if(strpos(mime_content_type($file->path), 'video/') === 0){
+                                array_push($videos, $arr);
+                            }
+                        } catch (\Throwable $th) {
+                            //throw $th;
+                        }
+                    }
+                }
+
+
                 $followers = Followers::where('following', $id)->get();
                 for($i = 0; $i < count($followers); $i++){
                     $follower = $followers[$i];
@@ -71,7 +94,7 @@ class Views extends Controller{
 
                 $posts = $this->validatePost($posts);
 
-                return view('index.profile')->with(['data' => $data, 'posts' => $posts, 'followers' => $followers]);
+                return view('index.profile')->with(['data' => $data, 'posts' => $posts, 'followers' => $followers,'videos' => $videos, 'images' => $images]);
             }
             else{
                 return view('404.index');
@@ -258,6 +281,12 @@ class Views extends Controller{
             else{
                 $post->user->image_path = asset($post->user->image_path);
             }
+
+            $isFollowing = Followers::where('following',$post->user->id)
+                        ->where('follower', session('user')->id)
+                        ->count();
+
+            $post->user->is_following = $isFollowing > 0;
 
             if($year == $post->year && $month == $post->month && $day == $post->day && $hour != $post->hour && $minute != $post->minute && ($hour - $post->hour) > 12){
                 $post->date = 'Today at '. $post->hour.':'.$post->minute;
