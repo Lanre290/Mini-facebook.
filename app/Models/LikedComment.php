@@ -13,5 +13,5 @@ class LikedComment extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['user','comment'];
+    protected $fillable = ['user','comment','notification'];
 }

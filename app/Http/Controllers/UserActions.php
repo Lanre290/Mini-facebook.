@@ -15,9 +15,8 @@ use App\Models\Likes;
 use App\Models\PostFiles;
 use App\Models\SavedPost;
 use App\Models\Comments;
-use App\Models\Messages;
-use App\Models\deletedMessages;
 use App\Models\LikedComment;
+use App\Models\Notifications;
 
 
 date_default_timezone_set('Africa/Lagos');
@@ -40,6 +39,15 @@ class UserActions extends Controller
             Followers::create([
                 'follower' => session('user')->id,
                 'following' => $id,
+            ]);
+
+            $notification = Notifications::create([
+                'user' => $id,
+                'text' => session('user')->name.' Started following you.',
+                'status' => 'unread',
+                'href' => 'profile/'.session('user')->id,
+                'timestamp' => time(),
+                'image' => session('user')->image_path
             ]);
     
             $followers = Followers::where('following', $id)
@@ -255,11 +263,21 @@ class UserActions extends Controller
             $id = $request->id;
 
             $isLiked = Likes::where('user', session('user')->id)->where('post', $id)->count();
+            $post = Post::where('id', $id)->first();
+            $user = Users::where('id', $post->user)->first();
     
             if($isLiked == 0){
                 Likes::create([
                     'user' => session('user')->id,
                     'post' => $id,
+                ]);
+                $notification = Notifications::create([
+                    'user' => $user->id,
+                    'text' => session('user')->name.' Liked your post.',
+                    'status' => 'unread',
+                    'href' => 'post/'.$post->id,
+                    'timestamp' => time(),
+                    'image' => 'img/heart_.png'
                 ]);
             }
             else{
@@ -323,6 +341,7 @@ class UserActions extends Controller
 
             $post = Post::where('id', $post_id)->get();
             $post = $this->Views->validatePost($post);
+            $user = Users::where('id', $post[0]->user->id)->first();
 
             Comments::create([
                 'text' => $text,
@@ -333,6 +352,14 @@ class UserActions extends Controller
                 'day' => $day,
                 'hour' => $hour,
                 'minute' => $minute
+            ]);
+            $notification = Notifications::create([
+                'user' => $user->id,
+                'text' => session('user')->name.' commented on your your post.',
+                'status' => 'unread',
+                'href' => 'post/'.$post_id,
+                'timestamp' => time(),
+                'image' => 'img/coment.png'
             ]);
 
             $comments = Comments::where('post', $post_id)->count();
@@ -395,46 +422,6 @@ class UserActions extends Controller
         }
     }
 
-    public function sendMessage(Request $request){
-        $request->vaidate([
-            'message' => 'string|required',
-            'receiver' => 'string|required',
-            'status' => 'string|required'
-        ]);
-
-        $message = $request->message;
-        $receiver = $request->receiver;
-        $user = session('user')->id;
-        $status = $request->status;
-        $months = ['','January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        $year = (int)date("Y");
-        $month = (int)date("m");
-        $month = $months[$month];
-        $day = (int)date("d");
-        $hour = (int)date('G');
-        $minute = (int)date('i');
-
-        $query = Messages::create([
-            'text' => $message,
-            'sender' => $user,
-            'receiver' => $receiver,
-            'status' => $status,
-            'year' => $year,
-            'month' => $month,
-            'day' => $day,
-            'hour' => $hour,
-            'minute' => $minute,
-            'timestamp' => time()
-        ]);
-
-        if($query){
-            return response()->json(['data' => true], 200);
-        }
-        else{
-            return response()->json(['error' => 'error connecting to database.'], 405);
-        }
-    }
-
     public function likeComment(Request $request){
         $request->validate([
             'id' => 'integer|required'
@@ -443,18 +430,39 @@ class UserActions extends Controller
         $id = $request->id;
         $query;
 
+
+        $comment = Comments::where('id', $id)->first();
+        $post = Post::where('id', $comment->post)->first();
+        $poster = Users::where('id', $post->user)->pluck('name')->first();
+        
         $checkIsLiked = LikedComment::where('user', session('user')->id)
                                     ->where('comment', $id)
                                     ->count();
+
         if($checkIsLiked > 0){
+            $comment = Comments::where('id', $id);
+            $notif = LikedComment::where('user', session('user')->id)
+                                    ->where('comment', $id)
+                                    ->pluck('notification')
+                                    ->first();
+            Notifications::where('id', $notif)->delete();
             $query = LikedComment::where('user', session('user')->id)
                                     ->where('comment', $id)
                                     ->delete();
         }
         else{
+            $notification = Notifications::create([
+                'user' => $comment->user,
+                'text' => session('user')->name.' Liked your comment on '. $poster .'\'s post.',
+                'status' => 'unread',
+                'href' => 'post/'.$post->id,
+                'timestamp' => time(),
+                'image' => 'img/heart_.png'
+            ]);
             $query = LikedComment::create([
                 'user' => session('user')->id,
-                'comment' => $id
+                'comment' => $id,
+                'notification' => $notification->id
             ]);
         }
 
@@ -468,4 +476,5 @@ class UserActions extends Controller
             return response()->json(['error' => 'error connecting to database.', 500]);
         }
     }
+
 }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('sender');
             $table->integer('receiver');
             $table->string('status')->default('normal');
+            $table->timestamp('timestamp');
             $table->string('year');
             $table->string('month');
             $table->string('day');

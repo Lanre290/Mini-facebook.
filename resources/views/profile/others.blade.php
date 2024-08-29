@@ -43,7 +43,7 @@
     <div class="w-full z-10 py-10 flex flex-col h-full pb-5 justify-between user-posts-conts" id='posts-cont'>
         @include('includes.posts',['data' => $posts])
     </div>
-    <div class="w-full flex flex-wrap content-start items-start justify-center user-posts-conts" id='videos-cont' style="display: none;">
+    <div class="w-full flex flex-wrap content-start items-start h-full pb-40 justify-center user-posts-conts" id='videos-cont' style="display: none;">
         @if (count($videos) == 0)
             <div class="w-full flex flex-col items-center">
                 <img src="{{ asset('img/empty-box.png') }}" alt="no saved post" class="w-32 h-32 object-contain mx-auto mt-10" />
@@ -51,7 +51,7 @@
             </div>
         @endif
         @foreach ($videos as $video)
-            <a class="relative w-1/4 h-56 m-1 bg-center bg-cover bg-no-repeat cursor-pointer" href = "{{ route('post', ['id' => $video->post_id]) }}">
+            <a class="relative w-1/4 h-56 m-1 bg-center bg-cover bg-no-repeat cursor-pointer bg-gray-200" href = "{{ route('post', ['id' => $video->post_id]) }}">
                 <i class="fa fa-play text-3xl top-1 right-1 text-gray-50"></i>
                 <video src="{{ asset($video->path) }}" class="h-full w-full max-h-full max-w-full absolute top-0 bottom-0 right-0 left-0 object-cover" autoplay loop muted></video>
                 <div class="absolute bg-opacity-0 opacity-0 z-10 bg-gray-600 top-0 bottom-0 right-0 left-0 cursor-pointer hover:bg-opacity-50 hover:opacity-100 flex justify-center items-center">
@@ -69,7 +69,7 @@
             </a>
         @endforeach
     </div>
-    <div class="w-full flex flex-wrap content-start items-start justify-center user-posts-conts" id='img-cont' style="display: none;">
+    <div class="w-full flex flex-wrap content-start items-start h-full pb-40 justify-center user-posts-conts" id='img-cont' style="display: none;">
         @if (count($images) == 0)
             <div class="w-full flex flex-col items-center">
                 <img src="{{ asset('img/empty-box.png') }}" alt="no saved post" class="w-32 h-32 object-contain mx-auto mt-10" />
@@ -77,7 +77,7 @@
             </div>
         @endif
         @foreach ($images as $image)
-            <a class="relative w-1/4 h-56 m-1 bg-center bg-cover bg-no-repeat cursor-pointer" href = "{{ route('post', ['id' => $image->post_id]) }}">
+            <a class="relative w-1/4 h-56 m-1 bg-center bg-cover bg-no-repeat cursor-pointer bg-gray-200" href = "{{ route('post', ['id' => $image->post_id]) }}">
                 <i class="fa fa-play text-3xl top-1 right-1 text-gray-50"></i>
                 <image src="{{ asset($image->path) }}" class="h-full w-full max-h-full max-w-full absolute top-0 bottom-0 right-0 left-0 object-cover" autoplay loop muted></image>
                 <div class="absolute bg-opacity-0 opacity-0 z-10 bg-gray-600 top-0 bottom-0 right-0 left-0 cursor-pointer hover:bg-opacity-50 hover:opacity-100 flex justify-center items-center">

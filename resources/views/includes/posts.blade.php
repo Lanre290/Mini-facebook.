@@ -1,7 +1,15 @@
 @include('includes.session')
 @if (count($data) == 0)
-    <div class="w-full h-full flex justify-center">
-        <div class="mx-auto text-3xl">You're all caught up. 🙃</div>
+    <div class="flex flex-col flex-start w-full">
+        <div class="w-full h-full flex justify-center">
+            <div class="mx-auto text-3xl">No Posts available at this moment. ☹️</div>
+        </div>
+        @isset($people)
+            <h3 class="text-4xl ml-3 mt-4 text-gray-900">Discover people to follow: </h3>
+            <div class="w-full z-10 min-h-screen py-10 flex flex-wrap content-start items-start justify-start h-full">
+                @include('includes.people',['data' => $people])
+            </div>
+        @endisset
     </div>
 @endif
 @foreach ($data as $post)
@@ -68,7 +76,7 @@
                                         <div class="absolute w-full flex flex-row justify-end items-end bottom-1 right-0 h-40 left-0 z-50" id="controls">
                                             <input type="range" class="h-1 cursor-pointer mb-3 m-2 flex-grow white-accent outline-none" id="playback" value="0" oninput="seekPostVideo(this, event)">
                                             <div class="flex flex-col justify-center items-end w-6 h-40 relative post-audio-cont">
-                                                <input type="range" class="cursor-pointer white-accent outline-none h-2 w-20 absolute bottom-16 -right-7 -mt-5 ml-3 volume-control hidden" style="transform: rotate(-90deg);" oninput="managePostVolume(this, event)"/>
+                                                <input type="range" class="cursor-pointer white-accent outline-none h-2 w-20 absolute bottom-16 -right-7 -mt-5 ml-3 volume-control hidden" style="transform: rotate(-90deg);" value="100" oninput="managePostVolume(this, event)"/>
                                                 <button class="text-gray-400 cursor-pointer w-10 h-10 absolute -bottom-1 -right-2" onclick="mutePostVideo(this, event)">
                                                     <i class="fa fa-volume-up"></i>
                                                 </button>

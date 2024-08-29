@@ -8,10 +8,10 @@
 
     <div class="absolute top-20 right-0 left-0 bottom-0 overflow-y-auto flex flex-row">
         @if (null !== session('user'))
-            @include('page-sections.left-sidebar', ['id' => session('user')->id, 'active' => 'home'])
+            @include('page-sections.left-sidebar', ['id' => session('user')->id, 'active' => 'home', 'unread' => $unread])
         @endif
         <div class="w-full sm:w-full lg:w-9/12 z-10 py-10 flex flex-col min-h-full h-fit overflow-y-auto justify-between">
-            @include('includes.posts',['data' => $data])
+            @include('includes.posts',['data' => $data,'people' => $people])
         </div>
     </div>
 </body>

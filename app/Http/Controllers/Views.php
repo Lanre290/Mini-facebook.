@@ -14,6 +14,8 @@ use App\Models\Likes;
 use App\Models\SavedPost;
 use App\Models\Comments;
 use App\Models\LikedComment;
+use App\Models\Messages;
+use App\Models\Notifications;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -60,7 +62,7 @@ class Views extends Controller{
                     foreach($files as $file){
                         try {
                             $comments = Comments::where('post', $post->id)->count();
-                            $likes = Likes::where('user', session('user')->id)->where('post', $post->id)->count();
+                            $likes = Likes::where('post', $post->id)->count();
                             $arr = (object)['path' => $file->path, 'likes' => $likes, 'comments' => $comments,'post_id' => $post->id];
                             if(strpos(mime_content_type($file->path), 'image/') === 0){
                                 array_push($images, $arr);
@@ -94,7 +96,9 @@ class Views extends Controller{
 
                 $posts = $this->validatePost($posts);
 
-                return view('index.profile')->with(['data' => $data, 'posts' => $posts, 'followers' => $followers,'videos' => $videos, 'images' => $images]);
+                $notif_count = Notifications::where('user', session('user')->id)->where('status','unread')->orderBy('timestamp', 'DESC')->count();
+
+                return view('index.profile')->with(['data' => $data, 'posts' => $posts, 'followers' => $followers,'videos' => $videos, 'images' => $images, 'unread' => $notif_count]);
             }
             else{
                 return view('404.index');
@@ -109,6 +113,8 @@ class Views extends Controller{
         if(null !== session('user')){
             $people = Users::where('id','!=', session('user')->id)->get();
             $count = 0;
+
+            $notif_count = Notifications::where('user', session('user')->id)->where('status','unread')->orderBy('timestamp', 'DESC')->count();
 
             foreach ($people as $person) {
                 $isFollowing = Followers::where('following',$person->id)
@@ -130,7 +136,7 @@ class Views extends Controller{
                 $count++;
             }
             
-            return view('index.people')->with(['data' => $people]);
+            return view('index.people')->with(['data' => $people, 'unread' => $notif_count]);
         }
         else{
             return redirect(route('login'));
@@ -142,10 +148,12 @@ class Views extends Controller{
             $savedPostIds = SavedPost::where('user', session('user')->id)->pluck('post');
             $posts = Post::whereIn('id', $savedPostIds)->orderBy('timestamp', 'DESC')->get();
 
+            $count = Notifications::where('user', session('user')->id)->where('status','unread')->orderBy('timestamp', 'DESC')->count();
+
 
             $posts = $this->validatePost($posts);
 
-            return view('index.saved')->with(['data' => $posts]);
+            return view('index.saved')->with(['data' => $posts, 'unread' => $count]);
         }
         else{
             return redirect(route('login'));
@@ -186,10 +194,34 @@ class Views extends Controller{
         if(null !== session('user')){
             $posts = Post::where('user', '!=', session('user')->id)->orderBy('timestamp', 'DESC')->get();
             
+            $people = Users::where('id','!=', session('user')->id)->get();
+            $count = 0;
+
+            $notif_count = Notifications::where('user', session('user')->id)->where('status','unread')->orderBy('timestamp', 'DESC')->count();
+
+            foreach ($people as $person) {
+                $isFollowing = Followers::where('following',$person->id)
+                            ->where('follower', session('user')->id)
+                            ->count();
+                $isBlocked = $this->isBlocked($person->id);
+                if($isBlocked > 0){
+                    unset($people[$count]);
+                }
+                if($person->image_path == ''){
+                    $person->image_path = asset('img/users_dp/person.png');
+                }
+                $followers = Followers::where('following',$person->id)
+                            ->count();
+                if ($isFollowing > 0) {
+                    $person->is_following = true;
+                }
+                $person->followers = $followers;
+                $count++;
+            }
 
             $posts = $this->validatePost($posts);
 
-            return view('index.home')->with(['data' => $posts]);
+            return view('index.home')->with(['data' => $posts,'people' => $people, 'unread' => $notif_count]);
         }
         else{
             return redirect(route('login'));
@@ -392,7 +424,17 @@ class Views extends Controller{
         return $comments;
     }
 
-    public function messages(){
-        return view('index.message');
+    public function settings(){
+        return view('index.settings');
+    }
+
+    public function notifications(){
+        $data = Notifications::where('user', session('user')->id)->orderBy('timestamp', 'DESC')->get();
+        $count = Notifications::where('user', session('user')->id)->where('status','unread')->orderBy('timestamp', 'DESC')->count();
+        Notifications::where('user', session('user')->id)->update([
+            'status' => 'read'
+        ]);
+
+        return view('index.notifications')->with(['data' => $data, 'unread' => $count]);
     }
 }

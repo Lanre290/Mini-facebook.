@@ -8,7 +8,7 @@
     
     <div class="absolute top-20 right-0 left-0 bottom-0 overflow-y-auto flex flex-row">
         @if (null !== session('user'))
-            @include('page-sections.left-sidebar', ['id' => session('user')->id, 'active' => 'people'])
+            @include('page-sections.left-sidebar', ['id' => session('user')->id, 'active' => 'people', 'unread' => $unread])
         @endif
         <div class="w-full sm:w-full md:w-9/12 z-10 min-h-screen py-10 flex flex-wrap content-start items-start justify-center h-full">
             {{-- <div class="flex flex-col rounded-lg cursor-pointer h-2/5 w-1/5 bg-gray-300 m-2">

@@ -1,5 +1,5 @@
 <div class="absolute top-0 right-0 left-0 h-20 shadow-lg flex items-center z-20 flex-row justify-between">
-    <a class="font-extrabold text-gray-700 ml-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl" href=''>The social</a>
+    <a class="font-extrabold text-blue-600 ml-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl" style="font-family: ;" href='/'>Connect</a>
     <div class="flex flex-row items-center justify-end">
         <form action="{{ route('search', ['term' => '']) }}" method="get" class="bg-gray-300 bg-opacity-50 w-64 h-fit rounded-lg m-3 flex flex-row p-1 px-3">
             <input type="text" name="term" id="" class="flex flex-grow h-11 bg-transparent focus:outline-none" placeholder="Search...">

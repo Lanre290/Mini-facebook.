@@ -46,7 +46,7 @@
                                     <div class="absolute w-full flex flex-row justify-end items-end bottom-3 right-0 h-40 left-0 z-50" id="controls">
                                         <input type="range" class="h-1 cursor-pointer mb-3 m-2 flex-grow white-accent outline-none" id="playback" value="0" oninput="seekPostVideo(this, event)">
                                         <div class="flex flex-col justify-center items-end w-16 h-40 relative post-audio-cont">
-                                            <input type="range" class="cursor-pointer white-accent outline-none h-3 w-24 absolute bottom-20 -right-7 -mt-5 ml-3 volume-control hidden" style="transform: rotate(-90deg);" oninput="managePostVolume(this, event)"/>
+                                            <input type="range" class="cursor-pointer white-accent outline-none h-3 w-24 absolute bottom-20 -right-7 -mt-5 ml-3 volume-control hidden" style="transform: rotate(-90deg);" value="100" oninput="managePostVolume(this, event)"/>
                                             <button class="text-gray-50 text-4xl cursor-pointer w-10 h-10 absolute -bottom-1 right-1" onclick="mutePostVideo(this, event)">
                                                 <i class="fa fa-volume-up"></i>
                                             </button>
@@ -113,8 +113,10 @@
                                 <div class="flex flex-row mt-1">
                                     <h3 class="text-xs text-gray-600 ml-2"> {{ $comment->date }} </h3>
                                     <input type="hidden" name="like-comment-token" value="{{ csrf_token() }}">
-                                    <img src="{{ $comment->isLiked == true ? asset('img/heart_.png') : asset('img/like.png') }}" alt="Like" class=" m-2 mt-0 mr-0 w-4 h-4 cursor-pointer grayscale post-btns" data-liked="{{ $comment->isLiked == true ? "true" : "false" }}" data-id="{{ $comment->id }}" onclick="likeComment(this)"/>
-                                    <h3 class="text-xs text-gray-600 ml-2"> {{ $comment->no_of_likes }} Likes </h3>
+                                    @if ($comment->user->id != session('user')->id)
+                                        <img src="{{ $comment->isLiked == true ? asset('img/heart_.png') : asset('img/like.png') }}" alt="Like" class=" m-2 mt-0 mr-0 w-4 h-4 cursor-pointer grayscale post-btns" data-liked="{{ $comment->isLiked == true ? "true" : "false" }}" data-id="{{ $comment->id }}" onclick="likeComment(this)"/>
+                                        <h3 class="text-xs text-gray-600 ml-2"> {{ $comment->no_of_likes }} Likes </h3>
+                                    @endif
                                     @if ($comment->user->id == session('user')->id)
                                         <input type="hidden" name="delete-comment-token" value="{{ csrf_token() }}">
                                         <h3 class="text-gray-600 text-xs w-fit ml-2 cursor-pointer hover:text-blue-600 hover:underline" data-id="{{ $comment->id }}" onclick="deleteComment(this)">Delete</h3>

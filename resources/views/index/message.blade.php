@@ -1,10 +1,11 @@
 @include('includes.header-script', ['url' => 'Messages'])
 
+
 <body class="flex  items-center justify-center w-screen h-screen relative">
     @include('page-sections.header')
     @include('includes.session')
-    
-    
+
+
     <div class="absolute top-20 right-0 left-0 bottom-0 overflow-y-auto flex flex-row">
         @if (null !== session('user'))
             @include('page-sections.left-sidebar', ['id' => session('user')->id, 'active' => 'messages'])
@@ -35,9 +36,9 @@
                     </div>
                 </div>
             </div>
-            <form class="w-full h-14 flex flex-row border items-center px-1 border-t border-gray-300">
+            <form id='message-form' class="w-full h-14 flex flex-row border items-center px-1 border-t border-gray-300">
                 <input type="hidden" class="hidden" name="message-token" value="{{ csrf_token() }}">
-                <input type="text" name="message" id="" class="flex h-12 p-3 flex-grow bg-gray-200 rounded-lg" placeholder="Type a message..." oninput="validateCommentButton(this)">
+                <input type="text" name="message" id="message-text" class="flex h-12 p-3 flex-grow bg-gray-200 rounded-lg" placeholder="Type a message..." oninput="validateCommentButton(this)">
                 <button class="cursor-default w-12 h-12 bg-cover bg-center bg-no-repeat ml-4 rounded-full text-gray-600 text-3xl hover:bg-gray-400 hover:bg-opacity-50 disabled:text-gray-600" disabled><i class="fa fa-paper-plane"></i></button>
             </form>
         </div>
@@ -46,7 +47,7 @@
         {{-- right side --}}
 
         <div class="w-3/12 border-l border-gray-300 flex flex-col">
-            <div class="w-full my-4">
+            <div class="w-full my-4 hidden" id= "current-messager">
                 <div class="rounded-full w-24 h-24 m-auto bg-center bg-cover bg-no-repeat" style="background-image: url('{{ asset('img/users_dp/default.png') }}')"></div>
                 <h3 class="text-gray-600 m-auto text-center text-2xl mt-2 font-semibold">Ashiru Olanrewaju</h3>
                 <div class="flex flex-row w-full justify-center items-center">
@@ -56,15 +57,17 @@
             </div>
             <h3 class="text-gray-600 text-4xl ml-3 font-bold mt-3">Messages</h3>
             <div class="flex-col mt-4 w-full overflow-x-hidden">
-                <div class="w-full h-24 cursor-pointer bg-transparent flex flex-row items-center hover:bg-gray-100">
-                    <div class="rounded-full bg-center m-3 bg-cover bg-no-repeat min-h-16 min-w-16" style="min-width: 4rem;min-height: 4rem;background-image: url('{{ asset('img/users_dp/default.png') }}')"></div>
-                    <div class="flex flex-col h-full items-start justify-center">
-                        <h3 class="text-2xl">Ashiru Olanrewaju</h3>
-                        <h3 class="w-7/12 text-ellipsis overflow-hidden whitespace-nowrap" style="text-overflow: ellipsis;">Hi, i'm a boyi sdjifgshfwgsjfhgwufuifhiwufgfgfugewfsfgsfgssgsdhj</h3>
+                @foreach ($data as $person)
+                    <div class="w-full h-24 cursor-pointer bg-transparent flex flex-row items-center hover:bg-gray-100">
+                        <div class="rounded-full bg-center m-3 bg-cover bg-no-repeat min-h-16 min-w-16" style="min-width: 4rem;min-height: 4rem;background-image: url('{{ asset('img/users_dp/default.png') }}')"></div>
+                        <div class="flex flex-col h-full items-start justify-center">
+                            <h3 class="text-2xl">{{ $person->name }} </h3>
+                            <h3 class="w-7/12 text-ellipsis overflow-hidden whitespace-nowrap" style="text-overflow: ellipsis;"> {{ $person->latest_message }} </h3>
+                        </div>
                     </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>
 </body>
-</html> 
+</html>

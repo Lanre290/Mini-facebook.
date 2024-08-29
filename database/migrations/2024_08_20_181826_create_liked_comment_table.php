@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('user');
             $table->integer('comment');
+            $table->integer('notification');
             $table->timestamps();
         });
     }

@@ -14,6 +14,17 @@
                     <h3 class="hidden lg:flex">Home</h3>
                 </a>
             </li>
+            <li class="w-full rounded-3xl text-center cursor-pointer  bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='notif_nav'>
+                <a href='{{ route('notifications')}}' class='w-full h-full py-3 px-6 flex flex-row items-center justify-left relative'>
+                    <div class="bg-center bg-no-repeat bg-cover w-10 h-10 mx-4" style="background-image: url('{{ asset('img/notification.png') }}')"></div>
+                    <h3 class="hidden lg:flex">Notifications</h3>
+                    @isset($unread)
+                        @if ($unread > 0)
+                            <div class="absolute bg-blue-500 flex justify-center items-center h-6 w-6 text-gray-50 text-sm rounded-full left-16 top-1/4">{{ $unread }}</div>
+                        @endif
+                    @endisset
+                </a>
+            </li>
             <li class="w-full rounded-3xl text-center cursor-pointer  bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='people_nav'>
                 <a href='{{ route('people')}}' class='w-full h-full py-3 px-6 flex flex-row items-center justify-left'>
                     <div class="bg-center bg-no-repeat bg-cover w-10 h-10 mx-4" style="background-image: url('{{ asset('img/social.png') }}')"></div>
@@ -24,12 +35,6 @@
                 <a href='{{ route('saved')}}' class='w-full h-full py-3 px-6 flex flex-row items-center justify-left'>
                     <div class="bg-center bg-no-repeat bg-cover w-10 h-10 mx-4" style="background-image: url('{{ asset('img/bookmark.png') }}')"></div>
                     <h3 class="hidden lg:flex">Saved</h3>
-                </a>
-            </li>
-            <li class="w-full rounded-3xl text-center cursor-pointer  bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='messages_nav'>
-                <a href='{{ route('messages')}}' class='w-full h-full py-3 px-6 flex flex-row items-center justify-left'>
-                    <div class="bg-center bg-no-repeat bg-cover w-10 h-10 mx-4" style="background-image: url('{{ asset('img/chat.png') }}')"></div>
-                    <h3 class="hidden lg:flex">Messages</h3>
                 </a>
             </li>
         @if ($active == 'home')
@@ -51,6 +56,10 @@
         @elseif ($active == 'messages')
             <script>
                 document.getElementById('messages_nav').classList.add('bg-gray-200');
+            </script>
+        @elseif ($active == 'notifications')
+            <script>
+                document.getElementById('notif_nav').classList.add('bg-gray-200');
             </script>
         @endif
     </ul>

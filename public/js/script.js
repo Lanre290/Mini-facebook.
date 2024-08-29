@@ -310,7 +310,7 @@ async function submitPostComment(element, event){
                                         <h3 class="text-xs text-gray-600 ml-2">${comment.date}</h3>
                                         <input type="hidden" name="like-comment-token" value="${comment.tk}">
                                         <img src="${comment.isLiked == true ? comment.heart : comment.like}" alt="Like" class=" m-2 mt-0 mr-0 w-4 h-4 cursor-pointer grayscale post-btns" data-liked="${comment.isLiked == true ? true : false}" data-id="${comment.id}" onclick="likeComment(this)"/>
-                                        <h3 class="text-xs text-gray-600 ml-2"> ${comment.no_of_likes} Likes </h3>
+                                            ${comment.by_user !== true ? `<h3 class="text-xs text-gray-600 ml-2"> ${comment.no_of_likes} Likes </h3>` : ''}
                                             ${comment.by_user == true ? `<input type="hidden" name="delete-comment-token" value="${comment.tk}">` : ''}
                                             ${comment.by_user == true ? `<h3 class="text-gray-600 text-xs w-fit ml-2 cursor-pointer hover:text-blue-600 hover:underline" data-id="${comment.id}" onclick="deleteComment(this)">Delete</h3>` : ''}
                                     </div>
@@ -586,4 +586,7 @@ async function likeComment(element){
             element.src = res.heart;
         }
     }
-}
+    else{
+        console.log(response.json());
+    }
+}   

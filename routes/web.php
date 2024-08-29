@@ -26,12 +26,12 @@ Route::get('/profile/{id}', [Views::class, 'profile'])->name('profile');
 Route::get('/people', [Views::class, 'people'])->name('people');
 Route::get('/saved', [Views::class, 'saved'])->name('saved');
 Route::get('/messages', [Views::class, 'messages'])->name('messages');
-
 Route::get('/post/{id}', [Views::class, 'post'])->name('post');
+Route::get('/settings',[Views::class, 'settings'])->name('settings');
+Route::get('/notifications',[Views::class, 'notifications'])->name('notifications');
 
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
 
 
 Route::prefix('/auth')->group(function(){

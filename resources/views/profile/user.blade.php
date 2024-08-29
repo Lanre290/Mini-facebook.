@@ -12,8 +12,9 @@
         <div class="flex flex-col md:flex-row align-center justify-between mt-16 w-fullz">
             <h1 class="text-5xl text-gray-800 ml-3 p-2 bg-transparent mb-3" id='user-name-text'>{{ session('user')->name }}</h1>
             <div class="flex flex-row">
-                <button class="w-5/6 md:w-auto py-2 h-10 px-5 bg-blue-600 mr-5 m-auto rounded-lg shadow-md cursor-pointer text-gray-50 hover:bg-blue-700" onclick="toggleMakePost()" id="make-post-btn"><i class="fa fa-plus"></i></button>
-                <button class="w-5/6 md:w-auto py-2 h-10 px-5 bg-blue-600 mr-5 m-auto rounded-lg shadow-md cursor-pointer text-gray-50 hover:bg-blue-700" id='edit-account'>Edit Profile</button>
+                <button class="w-5/6 md:w-auto py-2 h-10 px-5 bg-blue-600 mr-2 m-auto rounded-lg shadow-md cursor-pointer text-gray-50 hover:bg-blue-700" onclick="toggleMakePost()" id="make-post-btn"><i class="fa fa-plus"></i></button>
+                <a href="{{ route('settings') }}" class="w-5/6 md:w-auto py-2 h-10 px-5 bg-blue-600 mr-2 m-auto rounded-lg shadow-md cursor-pointer text-gray-50 hover:bg-blue-700" onclick="toggleAccountSettings()" id="acc-settings-btn"><i class="fa fa-user-cog"></i></a>
+                <button class="w-5/6 md:w-auto py-2 h-10 px-5 bg-blue-600 mr-2 m-auto rounded-lg shadow-md cursor-pointer text-gray-50 hover:bg-blue-700" id='edit-account'>Edit Profile</button>
                 <div class="flex flex-col relative w-10 h-10 mr-5 m-auto">
                     <button class="w-10 h-10 rounded-md cursor-pointer px-5 py-2 mr-5 m-auto bg-gray-200 hover:bg-gray-300 hover:bg-opacity-50 text-gray-50 flex justify-center items-center text-lg" onclick="toggleUserOptions(this)"><i class="fa fa-ellipsis-h"></i></button>
                     <div class="absolute -bottom-12 w-36 right-4 bg-gray-50 shadow-lg flex-col" style="display: none;" id="options">
@@ -49,7 +50,7 @@
         @include('includes.posts',['data' => $posts])
     </div>
 
-    <div class="w-full flex flex-wrap content-start items-start justify-center user-posts-conts" id='videos-cont' style="display: none;">
+    <div class="w-full flex flex-wrap content-start items-start pb-40 justify-center user-posts-conts" id='videos-cont' style="display: none;">
         @if (count($videos) == 0)
             <div class="w-full flex flex-col items-center">
                 <img src="{{ asset('img/empty-box.png') }}" alt="no saved post" class="w-32 h-32 object-contain mx-auto mt-10" />
@@ -57,7 +58,7 @@
             </div>
         @endif
         @foreach ($videos as $video)
-            <a class="relative w-1/4 h-56 m-1 bg-center bg-cover bg-no-repeat cursor-pointer" href = "{{ route('post', ['id' => $video->post_id]) }}">
+            <a class="relative w-1/4 h-56 m-1 bg-center bg-cover bg-no-repeat cursor-pointer bg-gray-200" href = "{{ route('post', ['id' => $video->post_id]) }}">
                 <i class="fa fa-play text-3xl top-1 right-1 text-gray-50"></i>
                 <video src="{{ asset($video->path) }}" class="h-full w-full max-h-full max-w-full absolute top-0 bottom-0 right-0 left-0 object-cover" autoplay loop muted></video>
                 <div class="absolute bg-opacity-0 opacity-0 z-10 bg-gray-600 top-0 bottom-0 right-0 left-0 cursor-pointer hover:bg-opacity-50 hover:opacity-100 flex justify-center items-center">
@@ -75,7 +76,7 @@
             </a>
         @endforeach
     </div>
-    <div class="w-full flex flex-wrap content-start items-start justify-center user-posts-conts" id='img-cont' style="display: none;">
+    <div class="w-full flex flex-wrap content-start items-start pb-40 justify-center user-posts-conts" id='img-cont' style="display: none;">
         @if (count($images) == 0)
             <div class="w-full flex flex-col items-center">
                 <img src="{{ asset('img/empty-box.png') }}" alt="no saved post" class="w-32 h-32 object-contain mx-auto mt-10" />
@@ -83,7 +84,7 @@
             </div>
         @endif
         @foreach ($images as $image)
-            <a class="relative w-1/4 h-56 m-1 bg-center bg-cover bg-no-repeat cursor-pointer" href = "{{ route('post', ['id' => $image->post_id]) }}">
+            <a class="relative w-1/4 h-56 m-1 bg-center bg-cover bg-no-repeat cursor-pointer bg-gray-200" href = "{{ route('post', ['id' => $image->post_id]) }}">
                 <i class="fa fa-play text-3xl top-1 right-1 text-gray-50"></i>
                 <image src="{{ asset($image->path) }}" class="h-full w-full max-h-full max-w-full absolute top-0 bottom-0 right-0 left-0 object-cover" autoplay loop muted></image>
                 <div class="absolute bg-opacity-0 opacity-0 z-10 bg-gray-600 top-0 bottom-0 right-0 left-0 cursor-pointer hover:bg-opacity-50 hover:opacity-100 flex justify-center items-center">
