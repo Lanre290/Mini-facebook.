@@ -17,6 +17,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <title>Log in</title>
 </head>
+
 <body class="flex items-center justify-center w-screen h-screen">
     <form action="{{ route('auth/login') }}" method="POST" id="login-form" class="w-full sm:w-full md:w-4/6 lg:w-5/12 h-screen sm:h-screen md:h-auto lg:h-auto flex flex-col items-center justify-center mx-auto shadow-lg rounded-lg my-auto p-5">
         @csrf

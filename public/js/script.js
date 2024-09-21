@@ -536,7 +536,7 @@ function logout(){
         }
     });
     
-    window.location.href = "{{ route('login') }}"
+    window.location.replace('/login');
 }
 
 
