@@ -43,7 +43,6 @@ async function validateSignUp(event){
             if (response.ok) {
                 signIn(email, pwd);
             } else {
-                // Handle errors (e.g., show an error message)
                 const errorData = await response.json();
                 console.log(errorData);
                 signupButton.removeAttribute('disabled');

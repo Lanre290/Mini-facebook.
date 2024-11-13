@@ -1,42 +1,42 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<div class="w-0 sm:w-0 md:w-0 lg:w-3/12 hidden z-10 py-10 sm:hidden md:hidden lg:flex flex-col h-full justify-between">
-    <ul class="w-full flex flex-col items-start px-5">
-            <li class="w-full rounded-3xl mb-5 text-center cursor-pointer  bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='profile_nav'>
-                <a href='{{ route('profile', ['id' => $id]) }}' class='w-full h-full py-3 px-6 flex flex-row items-center justify-left'>
-                    <div class="bg-center bg-no-repeat bg-cover rounded-full w-10 h-10 min-w-10 min-h-10 mx-4" id="sidebar-dp" style="background-image: url('{{ asset(session('user')->image_path) }}');min-height: 2.5rem;min-width:2.5rem;"></div>
-                    <h3 class="hidden font-bold whitespace-nowrap overflow-hidden lg:flex" style="text-overflow: ellipsis;">{{ session('user')->name }}</h3>
-                </a>
-            </li>
-            <li class="w-full rounded-3xl text-center cursor-pointer  bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='home_nav'>
-                <a href='{{ route('home')}}' class='w-full h-full py-3 px-6 flex flex-row items-center justify-left'>
-                    <div class="bg-center bg-no-repeat bg-cover w-10 h-10 mx-4" style="background-image: url('{{ asset('img/3d-house.png') }}')"></div>
-                    <h3 class="hidden lg:flex">Home</h3>
-                </a>
-            </li>
-            <li class="w-full rounded-3xl text-center cursor-pointer  bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='notif_nav'>
-                <a href='{{ route('notifications')}}' class='w-full h-full py-3 px-6 flex flex-row items-center justify-left relative'>
-                    <div class="bg-center bg-no-repeat bg-cover w-10 h-10 mx-4" style="background-image: url('{{ asset('img/notification.png') }}')"></div>
-                    <h3 class="hidden lg:flex">Notifications</h3>
-                    @isset($unread)
-                        @if ($unread > 0)
-                            <div class="absolute bg-blue-500 flex justify-center items-center h-6 w-6 text-gray-50 text-sm rounded-full left-16 top-1/4">{{ $unread }}</div>
-                        @endif
-                    @endisset
-                </a>
-            </li>
-            <li class="w-full rounded-3xl text-center cursor-pointer  bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='people_nav'>
-                <a href='{{ route('people')}}' class='w-full h-full py-3 px-6 flex flex-row items-center justify-left'>
-                    <div class="bg-center bg-no-repeat bg-cover w-10 h-10 mx-4" style="background-image: url('{{ asset('img/social.png') }}')"></div>
-                    <h3 class="hidden lg:flex">People</h3>
-                </a>
-            </li>
-            <li class="w-full rounded-3xl text-center cursor-pointer  bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='saved_nav'>
-                <a href='{{ route('saved')}}' class='w-full h-full py-3 px-6 flex flex-row items-center justify-left'>
-                    <div class="bg-center bg-no-repeat bg-cover w-10 h-10 mx-4" style="background-image: url('{{ asset('img/bookmark.png') }}')"></div>
-                    <h3 class="hidden lg:flex">Saved</h3>
-                </a>
-            </li>
+<div class="w-full fixed bottom-0 right-0 left-0 h-20 lg:h-full shadow-lg lg:shadow-none border-t border-gray-200 lg:border-0 lg:static lg:w-3/12 z-50 lg:py-10 flex flex-row lg:flex-col justify-between">
+    <ul class="w-full flex flex-row lg:flex-col items-start lg:px-5">
+        <li class="w-1/5 lg:w-full lg:rounded-3xl h-full lg:h-auto mb-5 text-center cursor-pointer  bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='profile_nav'>
+            <a href='{{ route('profile', ['id' => $id]) }}' class='w-full h-full lg:py-3 lg:px-6 flex flex-row items-center justify-center lg:justify-left'>
+                <div class="bg-center bg-no-repeat bg-cover rounded-full w-10 h-10 min-w-10 min-h-10 mx-4" id="sidebar-dp" style="background-image: url('{{ asset(session('user')->image_path) }}');min-height: 2.5rem;min-width:2.5rem;"></div>
+                <h3 class="hidden font-bold whitespace-nowrap overflow-hidden lg:flex" style="text-overflow: ellipsis;">{{ session('user')->name }}</h3>
+            </a>
+        </li>
+        <li class="w-1/5 h-full lg:h-auto lg:w-full lg:rounded-3xl text-center cursor-pointer  bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='home_nav'>
+            <a href='{{ route('home')}}' class='w-full h-full lg:py-3 lg:px-6 flex flex-row items-center justify-center lg:justify-left'>
+                <div class="bg-center bg-no-repeat bg-cover w-10 h-10 mx-4" style="background-image: url('{{ asset('img/3d-house.png') }}')"></div>
+                <h3 class="hidden lg:flex">Home</h3>
+            </a>
+        </li>
+        <li class="w-1/5 h-full lg:h-auto lg:w-full lg:rounded-3xl text-center cursor-pointer  bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='notif_nav'>
+            <a href='{{ route('notifications')}}' class='w-full h-full lg:py-3 lg:px-6 flex flex-row items-center justify-center lg:justify-left relative'>
+                <div class="bg-center bg-no-repeat bg-cover w-10 h-10 mx-4" style="background-image: url('{{ asset('img/notification.png') }}')"></div>
+                <h3 class="hidden lg:flex">Notifications</h3>
+                @isset($unread)
+                    @if ($unread > 0)
+                        <div class="absolute bg-blue-500 flex justify-center items-center h-6 w-6 text-gray-50 text-sm rounded-full left-16 top-1/4">{{ $unread }}</div>
+                    @endif
+                @endisset
+            </a>
+        </li>
+        <li class="w-1/5 h-full lg:h-auto lg:w-full lg:rounded-3xl text-center cursor-pointer  bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='people_nav'>
+            <a href='{{ route('people')}}' class='w-full h-full lg:py-3 lg:px-6 flex flex-row items-center justify-center lg:justify-left'>
+                <div class="bg-center bg-no-repeat bg-cover w-10 h-10 mx-4" style="background-image: url('{{ asset('img/social.png') }}')"></div>
+                <h3 class="hidden lg:flex">People</h3>
+            </a>
+        </li>
+        <li class="w-1/5 h-full lg:h-auto lg:w-full lg:rounded-3xl text-center cursor-pointer  bg-transparent hover:bg-gray-400 m-2 hover:bg-opacity-50 text-gray-700 text-2xl flex items-center justify-center my-0" id='saved_nav'>
+            <a href='{{ route('saved')}}' class='w-full h-full lg:py-3 lg:px-6 flex flex-row items-center justify-center lg:justify-left'>
+                <div class="bg-center bg-no-repeat bg-cover w-10 h-10 mx-4" style="background-image: url('{{ asset('img/bookmark.png') }}')"></div>
+                <h3 class="hidden lg:flex">Saved</h3>
+            </a>
+        </li>
         @if ($active == 'home')
         <script>
             document.getElementById('home_nav').classList.add('bg-gray-200');
